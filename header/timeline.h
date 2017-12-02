@@ -10,6 +10,7 @@
 #ifndef TIMELINE_H
 #define TIMELINE_H
 
+#include<time.h>
 //时间线事件
 struct timeline{
   char*name;  //姓名
@@ -42,7 +43,7 @@ struct fl_index{
 }fl_index[26];
 
 //功能接口
-int login(void);  //登录模块
+void login(void);  //登录模块
 void show_timeline(const struct timeline*tl);//以时间线形式显示事件
 int choice_setup(void);//进入功能界面选择相应的功能并返回对应的序号
 void list_allfri(struct fl_index*);//列出所有的朋友，也可以查询朋友
