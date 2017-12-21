@@ -18,23 +18,32 @@ void login(void)
   puts("\t\tWelcome to Timeline");
   puts("\t\t1:login   2:sign up");
   int i;
-  while(1==scanf("%d",&i)){
-    while('\n'!=getchar());  //clear input buffer
-
-    switch(i){
-      case 1:login_in();break;
-      case 2:sign_up();break;
-      default:puts("invalid input,try again:");
-    }
+  while(1!=scanf("%d",&i))
+    ; //invalid input value,reinput
+  while('\n'!=getchar())
+  ;  //clear input buffer
+  switch(i){
+    case 1:login_in();break;
+    case 2:sign_up();break;
+    default:puts("invalid input,try again:");
   }
+  return;
 }
 
 void login_in(void)
 {
-
+  char name[50]={'\0'};
+  printf("name:___\b\b\b");
+  while(NULL==fgets(name,50,stdin))
+    ;
+  char passwd[50]={'\0'};
+  printf("passwd:___\b\b\b");
+  while(NULL==fgets(passwd,50,stdin))
+    ;
+  return;
 }
 
 void sign_up(void)
 {
-
+  return;
 }
