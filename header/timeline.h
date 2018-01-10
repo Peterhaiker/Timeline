@@ -17,6 +17,7 @@ struct timeline{
   time_t tm;  //事件发生时期
   char*event;  //事件内容
   int finished;  //表明此事件是否被处理，1为已处理，0为没有
+  struct timeline*before;
   struct timeline*next;
 }Timeline;//以时间线显示事件
 
@@ -34,6 +35,7 @@ struct profile{
 struct fri_list{
   char*name;
   struct profile*profile;
+  struct fri_list*before;
   struct fri_list*next;
 }fri_list;
 
