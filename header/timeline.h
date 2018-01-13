@@ -11,6 +11,15 @@
 #define TIMELINE_H
 
 #include<time.h>
+#include<mysql/mysql.h>
+
+#define Format_Double_Symbol "============================================================"
+#define Format_Single_Symbol "------------------------------------------------------------"
+
+MYSQL mysql;//MYSQL对象
+MYSQL_RES *result;//结果集变量
+MYSQL_ROW row;//定义行变量
+
 //时间线事件
 struct timeline{
   char*name;  //姓名
