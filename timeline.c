@@ -12,6 +12,7 @@
 
 int main(int argc,char*argv[])
 {
+  mysql_init(&mysql);
   login();
   return 0;
 }

@@ -8,14 +8,14 @@
  */
 
 #include<stdio.h>
+#include<string.h>
 #include"../header/timeline.h"
-
-void login_in(void);
-void sign_up(void);
 
 void login(void)
 {
   system("reset");
+  char*sql=NULL;
+  char dest[200]={'\0'};
   puts("\t" Format_Double_Symbol);
   puts("\t||\t             Welcome to Timeline                  ||");
   puts("\t" Format_Double_Symbol);
@@ -28,27 +28,36 @@ void login(void)
   }
   while('\n'!=getchar());
 
-  switch(ch){
-    case '1':login_in();break;
-    case '2':sign_up();break;
+  if(!mysql_real_connect(&mysql,HOSTNAME,USERNAME,PASSWORD,DBNAME,0,NULL,0))
+    printf("\t连接数据库出错，请稍后再试!!!\n");
+  else{
+    //连接数据库成功
+    if('1'==ch){
+      //登录
+      printf("\t账户名:__\b\b");
+      char name[20]={'\0'};
+      char passwd[50]={'\0'};
+      fgets(name,20,stdin);
+      name[strlen(name)-1]='\0';
+      printf("\t密码:__\b\b");
+      fgets(passwd,50,stdin);
+      passwd[strlen(passwd)-1]='\0';
+
+      sql="select * from passwd where number="
+      strncpy(dest,sql,200);
+      strncat(dest,name,200);
+      if(mysql_query(&mysql,dest))
+        //数据库未存有记录,即登录失败
+        printf("\t服务器故障，请稍后再试!!!\n");
+      else{
+        result=mysql_store_result(&mysql);
+        if(0!=mysql_num_rows(result)){
+          while((row=mysql_fetch_row(result)))
+            //********************************************
+        }
+      }
+      //result=mysql_store_result(&mysql);
+    }
   }
-  return;
-}
-
-void login_in(void)
-{
-  char name[50]={'\0'};
-  printf("name:___\b\b\b");
-  while(NULL==fgets(name,50,stdin))
-    ;
-  char passwd[50]={'\0'};
-  printf("passwd:___\b\b\b");
-  while(NULL==fgets(passwd,50,stdin))
-    ;
-  return;
-}
-
-void sign_up(void)
-{
   return;
 }
