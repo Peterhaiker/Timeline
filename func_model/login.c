@@ -14,7 +14,7 @@
 
 void login(void)
 {
-  char name[20]={'\0'};
+  char account[20]={'\0'};
   char passwd[50]={'\0'};
   char*sql=NULL;
   char dest[200]={'\0'};
@@ -41,8 +41,8 @@ show_menu:system("reset");
     if('1'==ch){
       //登录
       printf("\t账户名:__\b\b");
-      fgets(name,20,stdin);
-      name[strlen(name)-1]='\0';
+      fgets(account,20,stdin);
+      account[strlen(account)-1]='\0';
       printf("\t密码:__\b\b");
       fgets(passwd,50,stdin);
       passwd[strlen(passwd)-1]='\0';
@@ -64,7 +64,7 @@ show_menu:system("reset");
         if(0!=mysql_num_rows(result))
           //数据库存有账户数据
           while((row=mysql_fetch_row(result)))
-            if(0==strcmp(name,row[0])){
+            if(0==strcmp(account,row[0])){
               printf("\t登录成功，2秒后自动跳转...\n");
               goto show_profile;//如果匹配成功就跳转，否则即为输入错误
             }
@@ -79,12 +79,12 @@ show_menu:system("reset");
     else if('2'==ch){
       //注册
       printf("\t账户名:_\b");
-      fgets(name,20,stdin);
-      name[strlen(name)-1]='\0';
+      fgets(account,20,stdin);
+      account[strlen(account)-1]='\0';
       //确定此用户名是否已存在
-      sql="select * from passwd where number='";
+      sql="select * from passwd where count='";
       strncpy(dest,sql,200);
-      strncat(dest,name,200);
+      strncat(dest,account,200);
       strncat(dest,"'",200);
       if(mysql_query(&mysql,dest))
         //执行sql语句错误
@@ -94,7 +94,7 @@ show_menu:system("reset");
         if(0!=mysql_num_rows(result)){
           //数据库存有记录
           while((row=mysql_fetch_row(result)))
-            if(0==strcmp(row[0],name)){
+            if(0==strcmp(row[0],account)){
               printf("\t此用户名已存在，按回车继续!!!\n");
               mysql_free_result(result);
               getchar();
@@ -106,9 +106,9 @@ show_menu:system("reset");
         fgets(passwd,50,stdin);
         passwd[strlen(passwd)-1]='\0';
         //构造sql插入语句
-        sql="insert into passwd(number,passwd) values('";
+        sql="insert into passwd(count,passwd) values('";
         strncpy(dest,sql,200);
-        strncat(dest,name,200);
+        strncat(dest,account,200);
         strncat(dest,"',",200);
         strncat(dest,"password('",200);
         strncat(dest,passwd,200);
@@ -122,7 +122,9 @@ show_menu:system("reset");
           getchar();
           exit(EXIT_FAILURE);
         }
-        printf("\t注册成功，按回车继续...");
+        printf("\t注册成功\n");
+        printf("\t用户名:%s\t密码:%s\n",account,passwd);
+        printf("\t按任意键继续...");
         getchar();
         goto show_profile;
       }
