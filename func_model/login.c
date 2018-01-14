@@ -28,9 +28,9 @@ void login(void)
     //连接数据库成功
 show_menu:system("reset");
     puts("\t" Format_Double_Symbol);
-    puts("\t||\t             Welcome to Timeline                  ||");
+    puts("\t||\t             欢迎来到珍谊                         ||");
     puts("\t" Format_Double_Symbol);
-    puts("\t\t         1:login   2:sign up   3:exit");
+    puts("\t\t         1:登录   2:注册    3:退出");
     printf("\t请选择:_\b");
     while(1!=scanf("%[123]",&ch)){
       while('\n'!=getchar());
@@ -82,7 +82,7 @@ show_menu:system("reset");
       fgets(account,20,stdin);
       account[strlen(account)-1]='\0';
       //确定此用户名是否已存在
-      sql="select * from passwd where count='";
+      sql="select * from passwd where account='";
       strncpy(dest,sql,200);
       strncat(dest,account,200);
       strncat(dest,"'",200);
@@ -106,7 +106,7 @@ show_menu:system("reset");
         fgets(passwd,50,stdin);
         passwd[strlen(passwd)-1]='\0';
         //构造sql插入语句
-        sql="insert into passwd(count,passwd) values('";
+        sql="insert into passwd(account,passwd) values('";
         strncpy(dest,sql,200);
         strncat(dest,account,200);
         strncat(dest,"',",200);

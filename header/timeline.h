@@ -59,8 +59,13 @@ struct fl_index{
 
 //功能接口
 void login(void);  //登录模块
-void show_timeline(const struct timeline*tl);//以时间线形式显示事件
-int choice_setup(void);//进入功能界面选择相应的功能并返回对应的序号
+void show_profile(void);//显示个人信息
+void modify_profile(void);//修改用户信息
+void all_timeline(const struct timeline*tl);//以时间线形式显示所有事件
+void add_timeline(void);//增加事件
+void alter_timeline(void);//修改事件状态
+void del_timeline(void);//删除事件
+void menu(void);//进入功能界面选择相应的功能
 void list_allfri(struct fl_index*);//列出所有的朋友，也可以查询朋友
 void add_fri(struct fl_index*,struct fri_list*,struct timeline*);//增加一个朋友
 void del_fri(struct fl_index*,struct fri_list*,struct timeline*);//删除好友

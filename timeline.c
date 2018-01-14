@@ -14,5 +14,6 @@ int main(int argc,char*argv[])
 {
   mysql_init(&mysql);
   login();
+  show_profile();
   return 0;
 }
