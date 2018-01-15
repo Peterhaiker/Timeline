@@ -10,6 +10,7 @@
 #include "stdio.h"
 #include"header/timeline.h"
 
+char login_name[50]={'\0'};//保存当前登录账户名
 int main(int argc,char*argv[])
 {
   mysql_init(&mysql);

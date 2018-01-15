@@ -12,6 +12,7 @@
 #include<string.h>
 #include"../header/timeline.h"
 
+extern char login_name[50];
 void login(void)
 {
   char account[20]={'\0'};
@@ -31,19 +32,20 @@ show_menu:system("reset");
     puts("\t||\t             欢迎来到珍谊                         ||");
     puts("\t" Format_Double_Symbol);
     puts("\t\t         1:登录   2:注册    3:退出");
-    printf("\t请选择:_\b");
+    puts("\t" Format_Single_Symbol);
+    printf("\t\t              请选择:_\b");
     while(1!=scanf("%[123]",&ch)){
       while('\n'!=getchar());
-      printf("\t错误输入!!!请重新选择:_\b");
+      printf("\t\t     错误输入!!!请重新选择:_\b");
     }
     while('\n'!=getchar());
 
     if('1'==ch){
       //登录
-      printf("\t账户名:__\b\b");
+      printf("\t\t              账户名:__\b\b");
       fgets(account,20,stdin);
       account[strlen(account)-1]='\0';
-      printf("\t密码:__\b\b");
+      printf("\t\t              密码:__\b\b");
       fgets(passwd,50,stdin);
       passwd[strlen(passwd)-1]='\0';
 
@@ -65,7 +67,7 @@ show_menu:system("reset");
           //数据库存有账户数据
           while((row=mysql_fetch_row(result)))
             if(0==strcmp(account,row[0])){
-              printf("\t登录成功，2秒后自动跳转...\n");
+              strncpy(login_name,account,50);
               goto show_profile;//如果匹配成功就跳转，否则即为输入错误
             }
         //登录错误或者数据库没有存有账户时
@@ -125,6 +127,7 @@ show_menu:system("reset");
         printf("\t注册成功\n");
         printf("\t用户名:%s\t密码:%s\n",account,passwd);
         printf("\t按任意键继续...");
+        strncpy(login_name,account,50);
         getchar();
         goto show_profile;
       }
@@ -133,5 +136,6 @@ show_menu:system("reset");
       exit(EXIT_SUCCESS);
   }
 show_profile:mysql_free_result(result);
+             mysql_close(&mysql);
   return;
 }
