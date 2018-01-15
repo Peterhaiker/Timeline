@@ -23,7 +23,7 @@ void show_profile(void)
     char*sql=NULL;//存储sql语句通用部分
     char dest[200]={'\0'};//存储sql语句
     //构造sql语句
-    snprintf(dest,200,"select * from %s where account='%s'",login_name,login_name);
+    snprintf(dest,200,"select * from %s_profile where account='%s'",login_name,login_name);
     //设置默认字符集
     mysql_set_character_set(&mysql,"utf8");
     //执行sql语句并取出结果集
