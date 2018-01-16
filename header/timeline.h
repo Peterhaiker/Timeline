@@ -59,10 +59,11 @@ struct fl_index{
 
 //功能接口
 void home(void);//主页
+void menu_choice(void);//菜单选项模块
 void login(void);//登录模块
 void show_profile(void);//显示个人信息
-void modify_profile(void);//修改用户信息
-void all_timeline(const struct timeline*tl);//以时间线形式显示所有事件
+void alter_profile(void);//修改用户信息
+void all_timeline(void);//以时间线形式显示所有事件
 void add_timeline(void);//增加事件
 void alter_timeline(void);//修改事件状态
 void del_timeline(void);//删除事件
