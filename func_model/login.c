@@ -63,7 +63,7 @@ show_menu:system("reset");
       else{//sql语句执行成功
         result=mysql_store_result(&mysql);
           if(0<mysql_num_rows(result)){
-            strncpy(login_name,account,50);
+            strncpy(login_name,account,20);
             goto show_profile;//如果匹配成功就跳转，否则即为输入错误
           }
         //登录错误或者数据库没有存有账户时
@@ -122,7 +122,7 @@ show_menu:system("reset");
             printf("\t\t              注册成功\n");
             printf("\t\t       用户名:%s\t密码:%s\n",account,passwd);
             printf("\t\t             按回车继续...");
-            strncpy(login_name,account,50);
+            strncpy(login_name,account,20);
             getchar();
             goto show_profile;
           }

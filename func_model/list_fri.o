@@ -1,0 +1,35 @@
+/* list_fri.c
+ * Copyright (C) 2018-01-16 16:50 
+ * author:peterhaiker
+ * email:vim.memory@gmail.com
+ *
+ * Distributed under terms of the MIT license.
+ */
+
+#include<stdio.h>
+#include"../header/timeline.h"
+
+extern char login_name[20];
+
+void list_fri(void)
+{
+  if(!mysql_real_connect(&mysql,HOSTNAME,USERNAME,PASSWORD,DBNAME,0,NULL,0)){
+    //连接数据库失败
+    fprintf(stderr,"\t                连接数据库失败，按回车继续...");
+    return;
+  }
+  else{
+    char dest[200]={'\0'};
+    snprintf(dest,200,"select * from %s_profile",login_name);
+    if((!mysql_query(&mysql,dest))&&(NULL!=mysql_store_result(&mysql))){
+      //sql语句执行成功且获取到结果集
+      puts("\t" Format_Double_Symbol);
+      puts("\t|                   朋友列表                   |");
+      puts("\t" Format_Single_Symbol);
+      puts("\t|    姓名              |性别|        生日        |   电话   |                       座右铭                      |");
+      mysql_free_result(result);
+    }
+    mysql_close(&mysql);
+  }
+  return;
+}
