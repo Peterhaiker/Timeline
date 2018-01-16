@@ -59,7 +59,7 @@ struct fl_index{
 
 //功能接口
 void home(void);//主页
-void menu_choice(void);//菜单选项模块
+void home_menu(void);//主页模块菜单导航
 void login(void);//登录模块
 void show_profile(void);//显示个人信息
 void alter_profile(void);//修改用户信息
