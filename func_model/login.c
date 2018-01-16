@@ -88,52 +88,50 @@ show_menu:system("reset");
         result=mysql_store_result(&mysql);
         if(0<mysql_num_rows(result)){
           //数据库存有记录
-              printf("\t\t 此用户名已存在，按回车继续!!!\n");
+              printf("\t\t      此用户名已存在，按回车继续!!!\n");
               mysql_free_result(result);
               getchar();
               goto show_menu;
         }
         //用户名不存在，继续输入密码完成注册
-        printf("\t\t           密码:_\b");
+        printf("\t\t              密码:_\b");
         fgets(passwd,50,stdin);
         passwd[strlen(passwd)-1]='\0';
-        //构造sql插入语句
-        snprintf(dest,200,"insert into passwd(account,passwd) values('%s',password('%s'))",account,passwd);
-        //构造成功，将此用户写入passwd表
-        puts(dest);
-        if(mysql_query(&mysql,dest)){
-          //注册失败
-          mysql_free_result(result);
-          fprintf(stderr,"\t\t注册失败，按回车键继续!!!\n");
-          getchar();
-          exit(EXIT_FAILURE);
-        }
-        //注册成功，接下来为此用户创建他自己的profile表和event表
-        //构造sql语句创建profile表
-        snprintf(dest,200,"create table %s_profile(account varchar(20) not null primary key,sex varchar(2),brith date,phone varchar(14),motto varchar(50))",account);
-        //执行sql语句
-        if(!mysql_query(&mysql,dest)){
-          //构造成功，接下来向这个表写入自己的信息,首先构造插入数据的sql语句
-          snprintf(dest,200,"insert into %s_profile(account),values('%s')",account,account);
-          //写入数据
-          if(!mysql_query(&mysql,dest)){
-            //写入成功，接下来构造event表
-            snprintf(dest,200,"create table %s_event(executor varchar(20) not null,event varchar(200) not null,exec_time datetime not null,state varchar(5) default '未完成')",account);
-            if(!mysql_query(&mysql,dest)){
-              puts("\t" Format_Single_Symbol);
-              printf("\t\t              注册成功\n");
-              printf("\t\t       用户名:%s\t密码:%s\n",account,passwd);
-              printf("\t\t            按任意键继续...");
-              strncpy(login_name,account,50);
-              getchar();
-              goto show_profile;
-            }
+        //创建mysql事务，只有所有步骤都成功才注册成功
+        if(!mysql_query(&mysql,"set autocommit=0")&&!mysql_query(&mysql,"start transaction")){
+          //开始事务
+          char sign_up_sql[200]={'\0'};
+          //构造sql插入语句
+          snprintf(sign_up_sql,200,"insert into passwd(account,passwd) values('%s',password('%s'))",account,passwd);
+          //构造sql语句创建profile表
+          char profile_sql[200]={'\0'};
+          snprintf(profile_sql,200,"create table %s_profile(account varchar(20) not null primary key,sex varchar(2),brith date,phone varchar(14),motto varchar(50))",account);
+          //构造成功的情况下，接下来向这个表写入自己的信息,首先构造插入数据的sql语句
+          char insert_profile[200]={'\0'};
+          snprintf(insert_profile,200,"insert into %s_profile(account) values('%s')",account,account);
+          //构造sql语句创建event表
+          char event_sql[200]={'\0'};
+          snprintf(event_sql,200,"create table %s_event(executor varchar(20) not null,event varchar(200) not null,exec_time datetime not null,state varchar(5) default '未完成')",account);
+          //执行sql语句
+          if(!mysql_query(&mysql,sign_up_sql)&&!mysql_query(&mysql,profile_sql)&&!mysql_query(&mysql,insert_profile)&&!mysql_query(&mysql,event_sql)){
+            //所有步骤都成功,提交事务
+            mysql_query(&mysql,"commit");
+            puts("\t" Format_Single_Symbol);
+            printf("\t\t              注册成功\n");
+            printf("\t\t       用户名:%s\t密码:%s\n",account,passwd);
+            printf("\t\t            按任意键继续...");
+            strncpy(login_name,account,50);
+            getchar();
+            goto show_profile;
           }
+          //注册失败，回滚事务
+          mysql_query(&mysql,"rollback");
         }
+        //注册失败
+        puts(mysql_error(&mysql));
+        puts("\t\t             注册失败,按回车继续...");
+        getchar();
       }
-      //注册失败
-      puts("\t\t   a          注册失败,按回车继续...");
-      getchar();
     }
     else if('3'==ch)
       exit(EXIT_SUCCESS);
