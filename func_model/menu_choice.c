@@ -14,9 +14,10 @@ void menu_choice(void)
   puts("\t" Format_Double_Symbol);
   puts("\t|                      *菜*单*导*航*                       |");
   puts("\t|                                                          |");
-  puts("\t|a:增加事件     b:修改事件      c:删除事件      d:修改信息 |");
-  puts("\t|e:搜索好友     f:添加好友      g:删除好友      h:好友名单 |");
-  puts("\t|i:返回主页     j:注销账户      k:退出登录      q:退出     |");
+  puts("\t| a:返回主页     b:账户资料      c:修改资料     d:退出登录 |");
+  puts("\t| e:搜索好友     f:添加好友      g:删除好友     h:好友名单 |");
+  puts("\t| i:增加事件     j:修改事件      k:删除事件     l:注销账户 |");
+  puts("\t| q:退出                                                   |");
   printf("\n\t请选择:_\b");
   char ch;
   while(1!=scanf("%[a-k,q]",&ch)){
@@ -25,20 +26,21 @@ void menu_choice(void)
   }
   while('\n'!=getchar());
 
-  /*switch(ch){
-    case 'a':add_timeline();break;
-    case 'b':alter_timeline();break;
-    case 'c':del_timeline();break;
-    case 'd':alter_profile();break;
-    case 'e':search_fri();break;
-    case 'f':add_fri();break;
-    case 'g':del_fri();break;
-    case 'h':list_fri();break;
-    case 'i':home();break;
-    case 'j':del_account();break;
-    case 'k':sign_out();break;
+  switch(ch){
+    case 'a':home();break;
+    case 'b':show_profile();break;
+//    case 'c':alter_profile();break;
+//    case 'd':sign_out();break;
+//    case 'e':search_fri();break;
+//    case 'f':add_fri();break;
+//    case 'g':del_fri();break;
+//    case 'h':list_fri();break;
+//    case 'i':add_timeline();break;
+//    case 'j':alter_timeline();break;
+//    case 'k':del_timeline();break;
+//    case 'l':del_account();break;
     case 'q':exit(EXIT_SUCCESS);break;
-    default:
-  }*/
+    default:break;
+  }
   exit(EXIT_SUCCESS);
 }

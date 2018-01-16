@@ -66,7 +66,7 @@ void show_profile(void)
           mysql_free_result(result);
         }
         else
-          puts("|\t               获取您的事件集失败                       |");
+          puts("\t|               获取您的事件集失败                       |");
       }
       //显示选项菜单
       mysql_close(&mysql);

@@ -14,8 +14,8 @@ char login_name[50]={'\0'};//保存当前登录账户名
 int main(int argc,char*argv[])
 {
   mysql_init(&mysql);
-  mysql_set_character_set(&mysql,"utf8");
   login();
+  home();
   show_profile();
   return 0;
 }

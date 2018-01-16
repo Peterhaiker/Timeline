@@ -25,6 +25,7 @@ void login(void)
     sleep(1);
     exit(EXIT_FAILURE);
   }
+  mysql_set_character_set(&mysql,"utf8");
   while(1){
     //连接数据库成功
 show_menu:system("reset");
@@ -50,7 +51,7 @@ show_menu:system("reset");
       passwd[strlen(passwd)-1]='\0';
 
       //构造sql语句
-      snprintf(dest,200,"select * from passwd where passwd=password('%s')",passwd);
+      snprintf(dest,200,"select * from passwd where account='%s' and passwd=password('%s')",account,passwd);
       if(mysql_query(&mysql,dest)){
         //sql语句执行失败
         printf("\t服务器故障，请稍后再试!!!按回车继续...\n");
@@ -61,14 +62,15 @@ show_menu:system("reset");
       }
       else{//sql语句执行成功
         result=mysql_store_result(&mysql);
-          while(row=mysql_fetch_row(result))
-            if(0==strcmp(account,row[0])){
-              strncpy(login_name,account,50);
-              goto show_profile;//如果匹配成功就跳转，否则即为输入错误
-            }
+          if(0<mysql_num_rows(result)){
+            strncpy(login_name,account,50);
+            goto show_profile;//如果匹配成功就跳转，否则即为输入错误
+          }
         //登录错误或者数据库没有存有账户时
         printf("\t账户名或密码输入错误!!!\n");
         printf("\t按回车继续...\n");
+        puts(dest);
+        puts(mysql_error(&mysql));
         getchar();
         //回收结果集空间
         mysql_free_result(result);
