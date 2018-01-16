@@ -49,10 +49,8 @@ show_menu:system("reset");
       fgets(passwd,50,stdin);
       passwd[strlen(passwd)-1]='\0';
 
-      sql="select * from passwd where passwd=password('";
-      strncpy(dest,sql,200);
-      strncat(dest,passwd,200);
-      strncat(dest,"')",200);
+      //构造sql语句
+      snprintf(dest,200,"select * from passwd where passwd=password('%s')",passwd);
       if(mysql_query(&mysql,dest)){
         //sql语句执行失败
         printf("\t服务器故障，请稍后再试!!!按回车继续...\n");
@@ -63,9 +61,7 @@ show_menu:system("reset");
       }
       else{//sql语句执行成功
         result=mysql_store_result(&mysql);
-        if(0!=mysql_num_rows(result))
-          //数据库存有账户数据
-          while((row=mysql_fetch_row(result)))
+          while(row=mysql_fetch_row(result))
             if(0==strcmp(account,row[0])){
               strncpy(login_name,account,50);
               goto show_profile;//如果匹配成功就跳转，否则即为输入错误

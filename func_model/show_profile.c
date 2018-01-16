@@ -42,7 +42,7 @@ void show_profile(void)
         //输出自己记录的事件
         mysql_free_result(result);
         //构造sql语句
-        snprintf(dest,200,"select * from %s_event where executor='%s'",login_name,login_name);
+        snprintf(dest,200,"select * from %s_event where executor='%s' order by exec_time",login_name,login_name);
         puts("\t" Format_Double_Symbol);
         puts("\t|                       **事×件×集**                       |");
         puts("\t|                                                          |");
