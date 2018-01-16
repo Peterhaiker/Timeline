@@ -16,6 +16,5 @@ int main(int argc,char*argv[])
   mysql_init(&mysql);
   login();
   home();
-  show_profile();
   return 0;
 }

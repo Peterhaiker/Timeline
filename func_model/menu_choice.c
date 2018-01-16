@@ -30,7 +30,7 @@ void menu_choice(void)
     case 'a':home();break;
     case 'b':show_profile();break;
 //    case 'c':alter_profile();break;
-//    case 'd':sign_out();break;
+    case 'd':sign_out();break;
 //    case 'e':search_fri();break;
 //    case 'f':add_fri();break;
 //    case 'g':del_fri();break;

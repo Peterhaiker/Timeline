@@ -121,7 +121,7 @@ show_menu:system("reset");
             puts("\t" Format_Single_Symbol);
             printf("\t\t              注册成功\n");
             printf("\t\t       用户名:%s\t密码:%s\n",account,passwd);
-            printf("\t\t            按任意键继续...");
+            printf("\t\t             按回车继续...");
             strncpy(login_name,account,50);
             getchar();
             goto show_profile;

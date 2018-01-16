@@ -44,7 +44,7 @@ void show_profile(void)
         //构造sql语句
         snprintf(dest,200,"select * from %s_event where executor='%s' order by exec_time",login_name,login_name);
         puts("\t" Format_Double_Symbol);
-        puts("\t|                        *事*件*集*                        |");
+        puts("\t|                    * 个*人*事*件*集*                     |");
         puts("\t|                                                          |");
         //执行sql语句查询属于登录用户的所有事件
         if((!mysql_query(&mysql,dest))&&(NULL!=(result=mysql_store_result(&mysql)))){
