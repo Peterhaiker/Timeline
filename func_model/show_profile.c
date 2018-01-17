@@ -37,9 +37,9 @@ void show_profile(void)
           puts("\t" Format_Double_Symbol);
           puts("\t|                      *个*人*信*息*                       |");
           puts("\t|                                                          |");
-          printf("\t|姓名:%-20s性别:%-20s好友数:%llu     |\n",row[0],row[1]?row[1]:"未知",mysql_num_rows(result)-1);
-          printf("\t|生日:%-19s电话:%-20s             |\n",row[2]?row[2]:"未知",row[3]?row[3]:"未知");
-          printf("\t|座右铭:%-s                                               |\n",row[4]?row[4]:"未知");
+          printf("\t|姓名:%-20s性别:%-19s好友数:%-6llu|\n",row[0],row[1]?row[1]:"未知",mysql_num_rows(result)-1);
+          printf("\t|生日:%-17s电话:%-31s|\n",row[2]?row[2]:"未知",row[3]?row[3]:"未知");
+          printf("\t|座右铭:%-55s|\n",row[4]?row[4]:"未知");
           //输出自己记录的事件
           mysql_free_result(result);
           //构造sql语句
@@ -72,9 +72,9 @@ void show_profile(void)
         //显示选项菜单
         mysql_close(&mysql);
         puts("\t" Format_Double_Symbol);
-        puts("\t|                      *菜*单*导*航*                         |");
-        puts("\t|                                                            |");
-        puts("\t| a:修改账户      b:退出账户      c:注销账户      d:返回主页 |");
+        puts("\t|                      *菜*单*导*航*                       |");
+        puts("\t|                                                          |");
+        puts("\t| a:修改账户      b:退出账户     c:注销账户     d:返回主页 |");
         printf("\n\t请选择:");
         char ch;
         while(1!=scanf("%[a-d]",&ch)){
@@ -86,7 +86,7 @@ void show_profile(void)
         switch(ch){
           case 'a':alter_profile();break;
           case 'b':sign_out();break;
-          case 'c':del_account();break;
+          //case 'c':del_account();break;
           case 'd':return;
           default:break;
         }

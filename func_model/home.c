@@ -60,16 +60,36 @@ void home(void)
           }
           mysql_free_result(result);
           mysql_close(&mysql);
-          home_menu();
+          //显示菜单
+          puts("\t" Format_Double_Symbol);
+          puts("\t|                     *菜*单*导*航*                        |");
+          puts("\t|                                                          |");
+          puts("\t| a:账户相关      b:好友相关      c:事件相关      d:退出   |");
+          printf("\n\t请选择:_\b");
+          char ch;
+          while(1!=scanf("%[a-d]",&ch)){
+            while('\n'!=getchar());
+            printf("\t                         输入不合法，请重新选择:_\b");
+          }
+          while('\n'!=getchar());
+
+          mysql_close(&mysql);
+          switch(ch){
+            case 'a':show_profile();break;
+            //case 'b':list_fri();break;
+            //case 'c':all_timeline();break;
+            case 'd':exit(EXIT_SUCCESS);break;
+            default:break;
+          }
         }
         else{
           //查询语句执行失败或返回结果集失败
+          mysql_close(&mysql);
           fprintf(stderr,"\t|              获取事件失败，按回车继续...                |");
           getchar();
           return;
         }
       }
-      mysql_close(&mysql);
     }
   }
   return;

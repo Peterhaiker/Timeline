@@ -114,17 +114,17 @@ void alter_profile(void)
 
       if(!mysql_query(&mysql,dest)){
         //更新成功
-        puts("\t更新成功");
+        puts("\t更新成功，按回车继续...");
         //显示更新后的信息
       }
       else
-        puts("\t更新失败");
+        puts("\t更新失败，按回车继续...");
       mysql_free_result(result);
     }
     else{
       puts("\t数据库发生错误，按回车继续...");
-      getchar();
     }
+    getchar();
     mysql_close(&mysql);
   }
   return;

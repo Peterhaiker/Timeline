@@ -133,6 +133,9 @@ show_menu:system("reset");
         puts(mysql_error(&mysql));
         puts("\t\t             注册失败,按回车继续...");
         getchar();
+        mysql_free_result(result);
+        mysql_close(&mysql);
+        exit(EXIT_FAILURE);
       }
     }
     else if('3'==ch)
