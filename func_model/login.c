@@ -107,7 +107,7 @@ show_menu:system("reset");
           snprintf(sign_up_sql,200,"insert into passwd(account,passwd) values('%s',password('%s'))",account,passwd);
           //构造sql语句创建profile表
           char profile_sql[200]={'\0'};
-          snprintf(profile_sql,200,"create table %s_profile(account varchar(20) not null primary key,sex varchar(2),brith date,phone varchar(14),motto varchar(50))",account);
+          snprintf(profile_sql,200,"create table %s_profile(account varchar(20) not null primary key,sex varchar(2),birth date,phone varchar(14),motto varchar(50))",account);
           //构造成功的情况下，接下来向这个表写入自己的信息,首先构造插入数据的sql语句
           char insert_profile[200]={'\0'};
           snprintf(insert_profile,200,"insert into %s_profile(account) values('%s')",account,account);
