@@ -69,14 +69,14 @@ void home(void)
           char ch;
           while(1!=scanf("%[a-d]",&ch)){
             while('\n'!=getchar());
-            printf("\t                         输入不合法，请重新选择:_\b");
+            printf("\t输入不合法，请重新选择:_\b");
           }
           while('\n'!=getchar());
 
           mysql_close(&mysql);
           switch(ch){
             case 'a':show_profile();break;
-            //case 'b':list_fri();break;
+            case 'b':list_fri();break;
             //case 'c':all_timeline();break;
             case 'd':exit(EXIT_SUCCESS);break;
             default:break;
