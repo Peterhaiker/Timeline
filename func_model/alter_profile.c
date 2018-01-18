@@ -13,10 +13,6 @@
 #include<time.h>
 #include"../header/timeline.h"
 
-extern char login_name[20];
-extern MYSQL mysql;
-extern MYSQL_RES*result;
-extern MYSQL_ROW row;
 void alter_profile(void)
 {
   mysql_set_character_set(&mysql,"utf8");

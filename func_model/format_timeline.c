@@ -11,8 +11,6 @@
 #include"../header/timeline.h"
 #include<assert.h>
 
-extern MYSQL_ROW row;
-
 void format_timeline(MYSQL_RES*result)
 {
   assert(result);//判断传入的是否为空指针

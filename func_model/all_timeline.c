@@ -10,11 +10,6 @@
 #include<ctype.h>
 #include"../header/timeline.h"
 
-extern MYSQL mysql;
-extern MYSQL_RES*result;
-extern MYSQL_ROW row;
-extern char login_name[20];
-
 void all_timeline(void)
 {
   char dest[200]={'\0'};

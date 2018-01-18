@@ -10,11 +10,6 @@
 #include<string.h>
 #include"../header/timeline.h"
 
-extern char login_name[50];
-extern MYSQL mysql;
-extern MYSQL_RES *result;
-extern MYSQL_ROW row;
-
 void home(void)
 {
   while(1){

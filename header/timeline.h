@@ -20,6 +20,10 @@ static const char*USERNAME="root";
 static const char*PASSWORD="2391457146";
 static const char*DBNAME="timeline";
 
+extern MYSQL mysql;
+extern MYSQL_RES *result;
+extern MYSQL_ROW row;
+extern char login_name[20];
 //时间线事件
 struct timeline{
   char*name;  //姓名

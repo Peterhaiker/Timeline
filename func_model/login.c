@@ -12,11 +12,6 @@
 #include<string.h>
 #include"../header/timeline.h"
 
-extern char login_name[50];
-extern MYSQL mysql;
-extern MYSQL_ROW row;
-extern MYSQL_RES *result;
-
 void login(void)
 {
   char account[20]={'\0'};

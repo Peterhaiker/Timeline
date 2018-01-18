@@ -10,10 +10,6 @@
 #include<stdio.h>
 #include"../header/timeline.h"
 
-extern char login_name[20];
-extern MYSQL mysql;
-extern MYSQL_RES *result;
-extern MYSQL_ROW row;
 void list_fri(void)
 {
   while(1){
@@ -32,7 +28,6 @@ void list_fri(void)
         printf("\t|座右铭:%-55s|\n",row[4]?row[4]:"未知");
       }
       mysql_free_result(result);
-      mysql_close(&mysql);
       //显示菜单
       puts("\t" Format_Double_Symbol);
       puts("\t|                       *菜*单*导*航*                      |");
