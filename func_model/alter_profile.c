@@ -98,7 +98,7 @@ void alter_profile(void)
       p1=p2=p3=NULL;
       int year,month,day;
       time_t tm;
-      struct tm birth_tm;
+      struct tm *birth_tm=NULL;
       int diff_time;
       printf("\t生日(YYYY-MM-DD):_\b");
       while(fgets(new_birth,15,stdin)){
@@ -112,15 +112,16 @@ void alter_profile(void)
           strncpy(birth_cpy,new_birth,15);
           birth_cpy[4]=birth_cpy[7]=birth_cpy[10]='\0';
           //判断时间是否大于当前时间
-          birth_tm.tm_year=(int)strtol(birth_cpy,&p1,10);
-          birth_tm.tm_mon=(int)strtol(birth_cpy+5,&p2,10);
-          birth_tm.tm_mday=(int)strtol(birth_cpy+8,&p3,10);
+          time(&tm);
+          birth_tm=localtime(&tm);//获取当前时间的struct_tm结构
+          birth_tm->tm_year=(int)strtol(birth_cpy,&p1,10)-1900;
+          birth_tm->tm_mon=(int)strtol(birth_cpy+5,&p2,10)-1;
+          birth_tm->tm_mday=(int)strtol(birth_cpy+8,&p3,10);
           if(p1!=birth_cpy+4||p2!=birth_cpy+7||p3!=birth_cpy+10){
             printf("\t大哥，请不要调戏我，输入数字好不好(YYY-MM-DD):_\b");
           }
           else{
-            printf("%d:%d:%d\n",birth_tm.tm_year,birth_tm.tm_mon,birth_tm.tm_mday);
-            tm=mktime(&birth_tm);
+            tm=mktime(birth_tm);
             puts(ctime(&tm));
             diff_time=difftime(tm,time(NULL));
             if(0<diff_time)
@@ -170,8 +171,13 @@ void alter_profile(void)
       new_motto[strlen(new_motto)-1]='\0';
 
       //开始更新账户信息
-      snprintf(dest,200,"update %s_profile set sex='%s',birth='%s',phone='%s',motto='%s'",login_name,new_sex,new_birth,new_phone,new_motto);
-
+      //检测座右铭中是否包含单引号和分号
+      char quotation_marks='\'';
+      if(strchr(new_motto,'\''))
+        quotation_marks='"';
+      if(strchr(new_motto,';'))
+        mysql_query(&mysql,"delimiter //");
+      snprintf(dest,200,"update %s_profile set sex='%s',birth='%s',phone='%s',motto=%c%s%c",login_name,new_sex,new_birth,new_phone,quotation_marks,new_motto,quotation_marks);
       if(!mysql_query(&mysql,dest)){
         //更新成功
         puts("\t更新成功，按回车继续...");
@@ -181,6 +187,8 @@ void alter_profile(void)
         puts("\t更新失败，按回车继续...");
         puts(mysql_error(&mysql));
       }
+      if(strchr(new_motto,';'))
+        mysql_query(&mysql,"delimiter ;");
       mysql_free_result(result);
     }
     else{
