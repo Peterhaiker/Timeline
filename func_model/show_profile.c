@@ -13,9 +13,9 @@
 
 void show_profile(void)
 {
+  char*sql=NULL;//存储sql语句通用部分
+  char dest[200]={'\0'};//存储sql语句
   while(1){
-    char*sql=NULL;//存储sql语句通用部分
-    char dest[200]={'\0'};//存储sql语句
     //构造sql语句
     snprintf(dest,200,"select * from %s_profile where account='%s'",login_name,login_name);
     //设置默认字符集
@@ -53,7 +53,7 @@ void show_profile(void)
       puts("\t" Format_Double_Symbol);
       puts("\t|                      *菜*单*导*航*                       |");
       puts("\t|                                                          |");
-      puts("\t| a:修改账户      b:退出账户     c:注销账户     d:返回主页 |");
+      puts("\t| a:修改账户      b:退出账户     c:删除账户     d:返回主页 |");
       printf("\n\t请选择:");
       char ch;
       while(1!=scanf("%[a-d]",&ch)){
@@ -64,7 +64,7 @@ void show_profile(void)
       switch(ch){
         case 'a':alter_profile();break;
         case 'b':sign_out();break;
-        //case 'c':del_account();break;
+        case 'c':del_account();login();break;
         case 'd':return;
         default:break;
       }
