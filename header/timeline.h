@@ -58,10 +58,10 @@ struct fl_index{
 }fl_index[26];
 
 //功能接口
-void home(void);//主页
-void home_menu(void);//主页模块菜单导航
+int home(void);//主页
+int home_menu(void);//主页模块菜单导航
 void login(void);//登录模块
-void show_profile(void);//显示个人信息
+int show_profile(void);//显示个人信息
 void alter_profile(void);//修改用户信息
 void all_timeline(void);//以时间线形式显示所有事件
 void format_timeline(MYSQL_RES*result);//格式化输出事件集
@@ -73,7 +73,6 @@ void list_fri(void);//列出所有的朋友
 void search_fri(void);//搜索好友
 void add_fri(void);//增加一个朋友
 void del_fri(void);//删除好友
-void del_account(void);//删除账户
-void sign_out(void);//退出登录
+int del_account(void);//删除账户
 
 #endif /* !TIMELINE_H */

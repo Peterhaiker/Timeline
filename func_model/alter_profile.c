@@ -114,7 +114,6 @@ void alter_profile(void)
         }
         else{
           tm=mktime(birth_tm);
-          puts(ctime(&tm));
           diff_time=difftime(tm,time(NULL));
           if(0<diff_time)
             printf("\t抱歉，您现在该待在娘胎，请重新输入或待在娘胎(YYYY-MM-DD):_\b");

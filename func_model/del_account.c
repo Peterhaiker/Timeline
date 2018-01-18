@@ -10,7 +10,7 @@
 #include<ctype.h>
 #include"../header/timeline.h"
 
-void del_account(void)
+int del_account(void)
 {
   char dest[200]={'\0'};
   mysql_set_character_set(&mysql,"utf8");
@@ -41,7 +41,7 @@ void del_account(void)
               if(!mysql_query(&mysql,"commit")){
                 printf("\t你还是那么狠心，按回车吧，前任");
                 getchar();
-                return;
+                return 1;
               }
             }
           }
@@ -55,5 +55,5 @@ void del_account(void)
   else{
     puts("\t哈哈，你怂了，舍不得我就别离开嘛");
   }
-  return;
+  return 0;
 }

@@ -68,8 +68,6 @@ show_menu:system("reset");
         //登录错误或者数据库没有存有账户时
         printf("\t账户名或密码输入错误!!!\n");
         printf("\t按回车继续...\n");
-        puts(dest);
-        puts(mysql_error(&mysql));
         getchar();
         //回收结果集空间
         mysql_free_result(result);

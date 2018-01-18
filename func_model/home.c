@@ -10,9 +10,11 @@
 #include<string.h>
 #include"../header/timeline.h"
 
-void home(void)
+int home(void)
 {
+  int return_value=-1;
   while(1){
+    return_value=-1;
     system("reset");
     char dest[200]={'\0'};//存储sql语句
     //连接数据库成功,设置默认字符集并取出事件集
@@ -21,7 +23,7 @@ void home(void)
       //取结果集失败
       fprintf(stderr,"\t数据库发生错误，按回车继续...");
       getchar();
-      return;
+      exit(EXIT_FAILURE);
     }
     else{
       //取结果集成功,构造查询事件语句
@@ -52,21 +54,23 @@ void home(void)
         while('\n'!=getchar());
 
         switch(ch){
-          case 'a':show_profile();break;
+          case 'a':return_value=show_profile();break;
           case 'b':list_fri();break;
           case 'c':all_timeline();break;
           case 'd':exit(EXIT_SUCCESS);break;
           default:break;
         }
+        if(1==return_value)
+          return 1;//返回到登录界面
       }
       else{
         //查询语句执行失败或返回结果集失败
         fprintf(stderr,"\t|              获取事件失败，按回车继续...                |");
         puts(mysql_error(&mysql));
         getchar();
-        return;
+        exit(EXIT_FAILURE);
       }
     }
   }
-  return;
+  exit(EXIT_SUCCESS);
 }
