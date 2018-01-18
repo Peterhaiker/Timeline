@@ -13,6 +13,10 @@
 #include"../header/timeline.h"
 
 extern char login_name[50];
+extern MYSQL mysql;
+extern MYSQL_ROW row;
+extern MYSQL_RES *result;
+
 void login(void)
 {
   char account[20]={'\0'};
@@ -134,14 +138,13 @@ show_menu:system("reset");
         puts("\t\t             注册失败,按回车继续...");
         getchar();
         mysql_free_result(result);
-        mysql_close(&mysql);
         exit(EXIT_FAILURE);
       }
     }
-    else if('3'==ch)
+    else if('3'==ch){
       exit(EXIT_SUCCESS);
+    }
   }
 show_profile:mysql_free_result(result);
-             mysql_close(&mysql);
   return;
 }

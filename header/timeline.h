@@ -20,10 +20,6 @@ static const char*USERNAME="root";
 static const char*PASSWORD="2391457146";
 static const char*DBNAME="timeline";
 
-MYSQL mysql;//MYSQL对象
-MYSQL_RES *result;//结果集变量
-MYSQL_ROW row;//定义行变量
-
 //时间线事件
 struct timeline{
   char*name;  //姓名
