@@ -60,6 +60,7 @@ void login(void);//登录模块
 void show_profile(void);//显示个人信息
 void alter_profile(void);//修改用户信息
 void all_timeline(void);//以时间线形式显示所有事件
+void format_timeline(MYSQL_RES*result);//格式化输出事件集
 void add_timeline(void);//增加事件
 void alter_timeline(void);//修改事件状态
 void del_timeline(void);//删除事件
