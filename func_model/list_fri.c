@@ -16,17 +16,21 @@ void list_fri(void)
     system("reset");
     mysql_set_character_set(&mysql,"utf8");
     char dest[200]={'\0'};
-    snprintf(dest,200,"select * from %s_profile",login_name);
+    snprintf(dest,200,"select * from %s_profile where account<>'%s'",login_name,login_name);
     if((!mysql_query(&mysql,dest))&&(NULL!=(result=mysql_store_result(&mysql)))){
       //sql语句执行成功且获取到结果集
       puts("\t" Format_Double_Symbol);
       puts("\t|                      *朋*友*列*表*                       |");
-      while(row=mysql_fetch_row(result)){
-        puts("\t" Format_Single_Symbol);
-        printf("\t|姓名:%-20s性别:%-19s好友数:%-6llu|\n",row[0],row[1]?row[1]:"未知",mysql_num_rows(result)-1);
-        printf("\t|生日:%-17s电话:%-31s|\n",row[2]?row[2]:"未知",row[3]?row[3]:"未知");
-        printf("\t|座右铭:%-55s|\n",row[4]?row[4]:"未知");
+      if(0<mysql_num_rows(result)){
+        while(row=mysql_fetch_row(result)){
+          puts("\t" Format_Single_Symbol);
+          printf("\t|姓名:%-20s性别:%-19s好友数:%-6llu|\n",row[0],row[1]?row[1]:"未知",mysql_num_rows(result)-1);
+          printf("\t|生日:%-17s电话:%-31s|\n",row[2]?row[2]:"未知",row[3]?row[3]:"未知");
+          printf("\t|座右铭:%-55s|\n",row[4]?row[4]:"未知");
+        }
       }
+      else
+        printf("\t                    暂无好友\n");
       mysql_free_result(result);
       //显示菜单
       puts("\t" Format_Double_Symbol);
@@ -42,7 +46,7 @@ void list_fri(void)
       while('\n'!=getchar());
 
       switch(ch){
-        //case 'a':search_fri();break;
+        case 'a':search_fri();break;
         //case 'b':add_fri();break;
         //case 'c':del_fri();break;
         case 'd':return;

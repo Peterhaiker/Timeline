@@ -31,7 +31,7 @@ int show_profile(void)
         puts("\t" Format_Double_Symbol);
         puts("\t|                      *个*人*信*息*                       |");
         puts("\t|                                                          |");
-        printf("|姓名:%-20s性别:%-10s好友数:%-6llu|",row[0],row[1]?row[1]:"未知",mysql_num_rows(result)-1);
+        printf("|姓名:%-20s性别:%-10s好友数:%-6llu|\n",row[0],row[1]?row[1]:"未知",mysql_num_rows(result)-1);
         printf("\t|生日:%-20s电话:%-29s|\n",row[2]?row[2]:"未知",row[3]?row[3]:"未知");
         printf("\t|座右铭:%-50s|\n",row[4]?row[4]:"未知");
         //输出自己记录的事件
