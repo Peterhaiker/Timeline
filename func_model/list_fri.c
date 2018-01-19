@@ -47,7 +47,7 @@ void list_fri(void)
 
       switch(ch){
         case 'a':search_fri();break;
-        //case 'b':add_fri();break;
+        case 'b':add_fri();break;
         //case 'c':del_fri();break;
         case 'd':return;
         default:break;
