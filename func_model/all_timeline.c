@@ -41,7 +41,7 @@ void all_timeline(void)
       ch=tolower(ch);
 
       switch(ch){
-        //case 'a':add_timeline();break;
+        case 'a':add_timeline();break;
         //case 'b':alter_timeline();break;
         //case 'c':del_timeline();break;
         case 'd':return;
