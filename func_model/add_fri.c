@@ -124,18 +124,21 @@ void add_fri(void)
         }
       }
       //开始写入好友信息
-      snprintf(dest,200,"insert into %s_profile values('%s','%s','%s','%s','%s')",login_name,name,sex,birth,phone,motto);
-      if(!mysql_query(&mysql,dest)){
+      char quotation_marks='\'';
+      if(strchr(motto,';'))
+        mysql_query(&mysql,"delimiter //");
+      if(strchr(motto,'\''))
+        quotation_marks='"';
+      snprintf(dest,200,"insert into %s_profile values('%s','%s','%s','%s',%c%s%c)",login_name,name,sex,birth,phone,quotation_marks,motto,quotation_marks);
+      if(!mysql_query(&mysql,dest))
         printf("\t写入成功，按回车继续...");
-        getchar();
-        return;
-      }
+      if(strchr(motto,';'))
+        mysql_query(&mysql,"delimiter ;");
     }
   }
   else{
     printf("\t数据库发生错误，按回车继续...");
-    getchar();
-    return;
   }
+  getchar();
   return;
 }
