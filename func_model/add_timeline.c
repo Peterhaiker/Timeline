@@ -66,7 +66,6 @@ void add_timeline(void)
                     event_tm->tm_mon=month;
                     event_tm->tm_year=year;
                     event_time=mktime(event_tm);
-                    puts(ctime(&event_time));
                     if(0<=difftime(event_time,time(NULL))){
                       //时间合理，跳出循环
                       exec_time[strlen(exec_time)-1]='\0';
