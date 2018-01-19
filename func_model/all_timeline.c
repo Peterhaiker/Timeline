@@ -43,7 +43,7 @@ void all_timeline(void)
       switch(ch){
         case 'a':add_timeline();break;
         //case 'b':alter_timeline();break;
-        //case 'c':del_timeline();break;
+        case 'c':del_timeline();break;
         case 'd':return;
       }
     }
