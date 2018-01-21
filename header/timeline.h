@@ -24,38 +24,6 @@ extern MYSQL mysql;
 extern MYSQL_RES *result;
 extern MYSQL_ROW row;
 extern char login_name[20];
-//时间线事件
-struct timeline{
-  char*name;  //姓名
-  time_t tm;  //事件发生时期
-  char*event;  //事件内容
-  int finished;  //表明此事件是否被处理，1为已处理，0为没有
-  struct timeline*before;
-  struct timeline*next;
-}Timeline;//以时间线显示事件
-
-//个人信息
-struct profile{
-  char*name;  //姓名
-  char sex[8];  //性别
-  time_t birth;  //出生年月日，以空格或小数点或斜杠分隔
-  char phone[14];  //电话号码
-  char*motto;  //座右铭
-  struct timeline*timeline;
-}profile;
-
-//显示所有朋友的链表
-struct fri_list{
-  char*name;
-  struct profile*profile;
-  struct fri_list*before;
-  struct fri_list*next;
-}fri_list;
-
-//对上一个朋友链表做的二级索引
-struct fl_index{
-  struct fri_list*first_profile;//每个字母开头的第一个朋友
-}fl_index[26];
 
 //功能接口
 int home(void);//主页
