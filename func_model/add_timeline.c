@@ -96,7 +96,7 @@ void add_timeline(void)
           }
       }
       //时间不合理，重新输入
-      printf("\\t时间不合理，请重新输入(YYYY-MM-DD HH:MM:SS):_\b");
+      printf("\t时间不合理，请重新输入(YYYY-MM-DD HH:MM:SS):_\b");
     }
   }
   //时间输入完毕，开始输入事件
