@@ -77,6 +77,8 @@ show_menu:system("reset");
       //注册
       printf("\t\t              账户名:_\b");
       fgets(account,20,stdin);
+      if('\n'!=account[strlen(account)-1])
+        while('\n'!=getchar());
       account[strlen(account)-1]='\0';
       //确定此用户名是否已存在
       snprintf(dest,200,"select * from passwd where account='%s'",account);
@@ -95,6 +97,8 @@ show_menu:system("reset");
         //用户名不存在，继续输入密码完成注册
         printf("\t\t              密码:_\b");
         fgets(passwd,50,stdin);
+        if('\n'!=passwd[strlen(passwd)-1])
+          while('\n'!=getchar());
         passwd[strlen(passwd)-1]='\0';
         //创建mysql事务，只有所有步骤都成功才注册成功
         if(!mysql_query(&mysql,"set autocommit=0")&&!mysql_query(&mysql,"start transaction")){
