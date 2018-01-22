@@ -28,7 +28,7 @@ void setting(void)
     ch=tolower(ch);
     switch(ch){
       case 'a':backup();break;
-      //case 'b':restore();break;
+      case 'b':restore();break;
       case 'r':return;break;
       default:break;
     }
