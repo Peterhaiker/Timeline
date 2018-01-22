@@ -32,7 +32,7 @@ void del_timeline(void)
     if(0<mysql_num_rows(result)){
       //存在这个执行者，继续
       mysql_free_result(result);
-      printf("输入这个事件的首尾5到10个字，中间用空格间隔:_\b");
+      printf("\t输入这个事件的首尾5到10个字，中间用空格间隔:_\b");
       while(1){
         fgets(event,30,stdin);
         if('\n'==event[strlen(event)-1]){
