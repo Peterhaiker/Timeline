@@ -27,7 +27,6 @@ extern char login_name[20];
 
 //功能接口
 int home(void);//主页
-int home_menu(void);//主页模块菜单导航
 void login(void);//登录模块
 int show_profile(void);//显示个人信息
 void alter_profile(void);//修改用户信息
@@ -42,8 +41,8 @@ void search_fri(void);//搜索好友
 void add_fri(void);//增加一个朋友
 void del_fri(void);//删除好友
 int del_account(void);//删除账户
-void setting(void);//设置
+int setting(void);//设置
 void backup(void);//备份数据库
-void restore(void);//恢复数据库
+int restore(void);//恢复数据库
 
 #endif /* !TIMELINE_H */

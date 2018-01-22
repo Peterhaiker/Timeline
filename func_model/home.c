@@ -58,7 +58,7 @@ int home(void)
           case 'a':return_value=show_profile();break;
           case 'b':list_fri();break;
           case 'c':all_timeline();break;
-          case 'd':setting();break;
+          case 'd':return_value=setting();break;
           case 'q':exit(EXIT_SUCCESS);break;
           default:break;
         }

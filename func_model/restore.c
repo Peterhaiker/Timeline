@@ -10,7 +10,7 @@
 #include<string.h>
 #include"../header/timeline.h"
 
-void restore(void)
+int restore(void)
 {
   printf("\t请输入备份文件路径:_\b");
   char sql_path[255]={'\0'};
@@ -26,10 +26,13 @@ void restore(void)
   }
   char command[350]={'\0'};
   snprintf(command,350,"mysql -u %s -p timeline <%s",USERNAME,sql_path);
-  if(0==system(command))
-    printf("\t恢复成功，按回车继续...");
+  if(0==system(command)){
+    printf("\t恢复成功，按回车重新登录...");
+    getchar();
+    return 1;
+  }
   else
     printf("\t恢复失败，按回车继续...");
   getchar();
-  return;
+  return 0;
 }

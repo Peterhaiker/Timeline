@@ -10,8 +10,9 @@
 #include<ctype.h>
 #include"../header/timeline.h"
 
-void setting(void)
+int setting(void)
 {
+  int return_value=-1;
   while(1){
     system("reset");
     puts("\t" Format_Double_Symbol);
@@ -28,10 +29,12 @@ void setting(void)
     ch=tolower(ch);
     switch(ch){
       case 'a':backup();break;
-      case 'b':restore();break;
-      case 'r':return;break;
+      case 'b':return_value=restore();break;
+      case 'r':return 0;break;
       default:break;
     }
+    if(1==return_value)
+      return 1;//恢复成功，重新登录
   }
-  return;
+  return 0;
 }
