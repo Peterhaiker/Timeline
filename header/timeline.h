@@ -42,5 +42,8 @@ void search_fri(void);//搜索好友
 void add_fri(void);//增加一个朋友
 void del_fri(void);//删除好友
 int del_account(void);//删除账户
+void setting(void);//设置
+void backup(void);//备份数据库
+void restore(void);//恢复数据库
 
 #endif /* !TIMELINE_H */
