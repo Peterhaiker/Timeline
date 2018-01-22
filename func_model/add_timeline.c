@@ -16,8 +16,9 @@ void add_timeline(void)
   mysql_set_character_set(&mysql,"utf8");
   printf("\t输入事件执行者:_\b");
   char executor[20]={'\0'};
-  char exec_time[21]={'\0'};
   char event[600]={'\0'};
+  char exec_time[21]={'\0'};
+  char state[12]={'\0'};
   char dest[700]={'\0'};
   while(1){
     fgets(executor,20,stdin);
@@ -37,7 +38,7 @@ void add_timeline(void)
     fgets(exec_time,21,stdin);
     if('-'!=exec_time[4]||'-'!=exec_time[7]||' '!=exec_time[10]||':'!=exec_time[13]||':'!=exec_time[16]||'\n'!=exec_time[19]){
       printf("输入不正确，重新输入(YYYY-MM-DD HH:MM:SS):_\b");
-      if('\n'!=exec_time[19])
+      if('\n'!=exec_time[strlen(exec_time)-1])
         while('\n'!=getchar());
     }
     else{
@@ -105,30 +106,33 @@ void add_timeline(void)
     fgets(event,600,stdin);
     if('\n'==event[strlen(event)-1]){
       //未超过上限
-      if(NULL!=strchr(event,';'))
-        mysql_query(&mysql,"delimiter //");
-      char quotation_marks='\'';
-      if(NULL!=strchr(event,'\''))
-        quotation_marks='"';
-      snprintf(dest,700,"insert into %s_event(executor,event,exec_time) values('%s',%c%s%c,'%s')",login_name,executor,quotation_marks,event,quotation_marks,exec_time);
-      if(!mysql_query(&mysql,dest)){
-        if(NULL!=strchr(event,';'))
-          mysql_query(&mysql,"delimiter ;");
-        printf("\t事件已增加，按回车继续...");
-        getchar();
-        return;
-      }
-      else{
-        printf("\t事件增加失败，按回车继续...");
-        puts(mysql_error(&mysql));
-        if(NULL!=strchr(event,';'))
-          mysql_query(&mysql,"delimiter ;");
-        return;
-      }
+      event[strlen(event)-1]='\0';
+      break;
     }
     else{
       printf("\t事件内容超过上限200字，重新输入:_\b");
+      while('\n'!=getchar());
     }
+  }
+  if(NULL!=strchr(event,';'))
+    mysql_query(&mysql,"delimiter //");
+  char quotation_marks='\'';
+  if(NULL!=strchr(event,'\''))
+    quotation_marks='"';
+  snprintf(dest,700,"insert into %s_event values('%s',%c%s%c,'%s','%s')",login_name,executor,quotation_marks,event,quotation_marks,exec_time,"未完成");
+  if(!mysql_query(&mysql,dest)){
+    if(NULL!=strchr(event,';'))
+      mysql_query(&mysql,"delimiter ;");
+    printf("\t事件已增加，按回车继续...");
+    getchar();
+    return;
+  }
+  else{
+    printf("\t事件增加失败，按回车继续...");
+    puts(mysql_error(&mysql));
+    if(NULL!=strchr(event,';'))
+      mysql_query(&mysql,"delimiter ;");
+    return;
   }
   return;
 }

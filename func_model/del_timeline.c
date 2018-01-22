@@ -46,6 +46,7 @@ void del_timeline(void)
             if(NULL!=strchr(event,'"'))
               quotation_marks='"';
             snprintf(dest,200,"delete from %s_event where executor='%s' and event like %c%s%c",login_name,name,quotation_marks,event,quotation_marks);
+            puts(dest);
             if(!mysql_query(&mysql,dest)){
               if(NULL!=strchr(event,';'))
                 mysql_query(&mysql,"delimiter ;");

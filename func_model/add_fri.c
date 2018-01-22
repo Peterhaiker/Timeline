@@ -87,7 +87,6 @@ void add_fri(void)
                 birth_tm->tm_mon=month;
                 birth_tm->tm_mday=day;
                 birth_time=mktime(birth_tm);
-                puts(ctime(&birth_time));
                 if(0<difftime(time(NULL),birth_time)){
                   break;
                 }
