@@ -14,7 +14,7 @@
 void alter_timeline(void)
 {
   mysql_set_character_set(&mysql,"utf8");
-  char dest[700]={'\0'};
+  char dest[300]={'\0'};
   char executor[20]={'\0'};
   char event[70]={'\0'};
   printf("\t输入您要修改的事件的执行者:_\b");
@@ -29,7 +29,7 @@ void alter_timeline(void)
     break;
   }
 
-  snprintf(dest,700,"select executor from %s_event where executor='%s'",login_name,executor);
+  snprintf(dest,300,"select executor from %s_event where executor='%s'",login_name,executor);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
     if(0>=mysql_num_rows(result)){
       fprintf(stderr,"\t没有这个执行者，按回车继续...");
@@ -65,13 +65,13 @@ void alter_timeline(void)
     quotation_marks='"';
   if(NULL!=strchr(event,';'))
     mysql_query(&mysql,"delimiter //");
-  snprintf(dest,700,"select * from %s_profile where executor='%s' and event like %c%s%c",login_name,executor,quotation_marks,event,quotation_marks);
+  snprintf(dest,300,"select * from %s_profile where executor='%s' and event like %c%s%c",login_name,executor,quotation_marks,event,quotation_marks);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
     format_timeline(result);
     mysql_free_result(result);
   }
   char new_executor[20]={'\0'};
-  char new_event[600]={'\0'};
+  char new_event[150]={'\0'};
   char new_time[21]={'\0'};
   char new_state[11]={'\0'};
   printf("\t请输入新执行者，按q取消更改:_\b");
@@ -89,7 +89,7 @@ void alter_timeline(void)
   }
   printf("\t请输入新事件(上限200字)，按q取消:_\b");
   while(1){
-    fgets(new_event,600,stdin);
+    fgets(new_event,150,stdin);
     if(NULL==strchr(new_event,'\n')){
       fprintf(stderr,"\t事件最多200字，重新输入:_\b");
       while('\n'!=getchar());
@@ -190,48 +190,48 @@ void alter_timeline(void)
     break;
   }
   //构造更新记录语句
-  snprintf(dest,700,"update ");
-  strncat(dest,login_name,700);
-  strncat(dest,"_event set ",700);
+  snprintf(dest,300,"update ");
+  strncat(dest,login_name,300);
+  strncat(dest,"_event set ",300);
   if(0!=strlen(new_executor)){
-    strncat(dest,"executor='",700);
-    strncat(dest,new_executor,700);
-    strncat(dest,"',",700);
+    strncat(dest,"executor='",300);
+    strncat(dest,new_executor,300);
+    strncat(dest,"',",300);
   }
   if(0!=strlen(new_event)){
     if(NULL!=strchr(new_event,'\''))
-      strncat(dest,"event=\"",700);
+      strncat(dest,"event=\"",300);
     else
-      strncat(dest,"event='",700);
-    strncat(dest,new_event,700);
+      strncat(dest,"event='",300);
+    strncat(dest,new_event,300);
     if(NULL!=strchr(new_event,'\''))
-      strncat(dest,"\",",700);
+      strncat(dest,"\",",300);
     else
-      strncat(dest,"',",700);
+      strncat(dest,"',",300);
   }
   if(0!=strlen(new_time)){
-    strncat(dest,"exec_time='",700);
-    strncat(dest,new_time,700);
-    strncat(dest,"',",700);
+    strncat(dest,"exec_time='",300);
+    strncat(dest,new_time,300);
+    strncat(dest,"',",300);
   }
   if(0!=strlen(new_state)){
-    strncat(dest,"state='",700);
-    strncat(dest,new_state,700);
-    strncat(dest,"',",700);
+    strncat(dest,"state='",300);
+    strncat(dest,new_state,300);
+    strncat(dest,"',",300);
   }
   dest[strlen(dest)-1]='\0';
-  strncat(dest," where executor='",700);
-  strncat(dest,executor,700);
-  strncat(dest,"' and event like ",700);
+  strncat(dest," where executor='",300);
+  strncat(dest,executor,300);
+  strncat(dest,"' and event like ",300);
   if(NULL!=strchr(event,'\''))
-    strncat(dest,"\"",700);
+    strncat(dest,"\"",300);
   else
-    strncat(dest,"\'",700);
-  strncat(dest,event,700);
+    strncat(dest,"\'",300);
+  strncat(dest,event,300);
   if(NULL!=strchr(event,'\''))
-    strncat(dest,"\"",700);
+    strncat(dest,"\"",300);
   else
-    strncat(dest,"\'",700);
+    strncat(dest,"\'",300);
   if(NULL!=strchr(event,';'))
     mysql_query(&mysql,"delimiter //");
   //更新记录

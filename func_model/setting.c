@@ -16,9 +16,9 @@ int setting(void)
   while(1){
     system("reset");
     puts("\t" Format_Double_Symbol);
-    puts("\t|                            *设*置*                        |");
-    puts("\t|                                                           |");
-    puts("\t| a:备份                 b:恢复                  r:返回主页 |");
+    puts("\t|                                                          *设*置*                                                      |");
+    puts("\t|                                                                                                                       |");
+    puts("\t|                  a:备份                                  b:恢复                              r:返回主页               |");
     printf("\n\t请选择:_\b");
     char ch;
     while(1!=scanf("%[abrABR]",&ch)){

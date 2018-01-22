@@ -31,21 +31,21 @@ int home(void)
       if((!mysql_query(&mysql,dest))&&(NULL!=(result=mysql_store_result(&mysql)))){
         //查询语句成功且返回了结果集
         puts("\t" Format_Double_Symbol);
-        puts("\t|          .    .    ....      ..     ..    ......         |");
-        puts("\t|          .    .   .    .     . .   . .     .             |");
-        puts("\t|          ......  .      .    .  . .  .      .            |");
-        puts("\t|          .    .   .    .     .   .   .     .             |");
-        puts("\t|          .    .    ....      .   .   .    ......         |");
+        puts("\t|                                        .    .    ....      ..     ..    ......                                       |");
+        puts("\t|                                        .    .   .    .     . .   . .     .                                           |");
+        puts("\t|                                        ......  .      .    .  . .  .      .                                          |");
+        puts("\t|                                        .    .   .    .     .   .   .     .                                           |");
+        puts("\t|                                        .    .    ....      .   .   .    ......                                       |");
         puts("\t" Format_Double_Symbol);
-        puts("\t|                       *事*件*集*                         |");
+        puts("\t|                                                      *事*件*集*                                                      |");
         format_timeline(result);
         mysql_free_result(result);
         //显示菜单
         puts("\t" Format_Double_Symbol);
-        puts("\t|                     *菜*单*导*航*                        |");
-        puts("\t|                                                          |");
-        puts("\t| a:账户相关      b:好友相关      c:事件相关      d:设置   |");
-        puts("\t| q:退出                                                   |");
+        puts("\t|                                                     *菜*单*导*航*                                                    |");
+        puts("\t|                                                                                                                      |");
+        puts("\t|              a:账户相关                 b:好友相关                   c:事件相关                  d:设置              |");
+        puts("\t|              q:退出                                                                                                  |");
         printf("\n\t请选择:_\b");
         char ch;
         while(1!=scanf("%[a-d,q]",&ch)){
@@ -67,7 +67,7 @@ int home(void)
       }
       else{
         //查询语句执行失败或返回结果集失败
-        fprintf(stderr,"\t|              获取事件失败，按回车继续...                |");
+        fprintf(stderr,"\t|                               获取事件失败，按回车继续...                                                                      |");
         puts(mysql_error(&mysql));
         getchar();
         exit(EXIT_FAILURE);

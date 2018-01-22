@@ -32,8 +32,8 @@ void search_fri(void)
       if('y'==ch){
         system("reset");
         puts("\t" Format_Double_Symbol);
-        puts("\t|                     *好*友*列*表*                     |");
-        puts("\t|                                                       |");
+        puts("\t|                                                   *好*友*列*表*                                                   |");
+        puts("\t|                                                                                                                   |");
         printf("\t|");
         for(int i=0;row=mysql_fetch_row(result);++i){
           if((0!=i)&&(0==i%3))
@@ -63,14 +63,14 @@ void search_fri(void)
         row=mysql_fetch_row(result);
         system("reset");
         puts("\t" Format_Double_Symbol);
-        puts("\t|                      *好*友*信*息*                     |");
-        puts("\t|                                                        |");
-        printf("\t|姓名:%-20s性别:%-26s|\n",row[0],row[1]?row[1]:"未知");
-        printf("\t|生日:%-20s电话:%-29s|\n",row[2]?row[2]:"未知",row[3]?row[3]:"未知");
-        printf("\t|座右铭:%-50s|\n",row[4]?row[4]:"未知");
+        puts("\t|                                                    *好*友*信*息*                                                   |");
+        puts("\t|                                                                                                                    |");
+        printf("\t|姓名:%-50s性别:%-56s|\n",row[0],row[1]?row[1]:"未知");
+        printf("\t|生日:%-50s电话:%-59s|\n",row[2]?row[2]:"未知",row[3]?row[3]:"未知");
+        printf("\t|座右铭:%-.120s|\n",row[4]?row[4]:"未知");
         puts("\t" Format_Single_Symbol);
-        puts("\t|                        *事*件*集*                      |");
-        puts("\t|                                                        |");
+        puts("\t|                                                     *事*件*集*                                                     |");
+        puts("\t|                                                                                                                    |");
         snprintf(dest,200,"select * from %s_event where executor='%s'",login_name,name);
         if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
           format_timeline(result);

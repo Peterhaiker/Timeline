@@ -29,23 +29,23 @@ void login(void)
     //连接数据库成功
 show_menu:system("reset");
     puts("\t" Format_Double_Symbol);
-    puts("\t||\t             欢迎来到珍谊                         ||");
+    puts("\t|                                                      欢迎来到珍谊                                                        |");
     puts("\t" Format_Double_Symbol);
-    puts("\t\t         1:登录   2:注册    3:退出");
+    puts("\t                          1:登录                          2:注册                                3:退出                     |");
     puts("\t" Format_Single_Symbol);
-    printf("\t\t              请选择:_\b");
+    printf("\t                                                       请选择:_\b");
     while(1!=scanf("%[123]",&ch)){
       while('\n'!=getchar());
-      printf("\t\t     错误输入!!!请重新选择:_\b");
+      printf("\t                                             错误输入!!!请重新选择:_\b");
     }
     while('\n'!=getchar());
 
     if('1'==ch){
       //登录
-      printf("\t\t              账户名:__\b\b");
+      printf("\t                                                     账户名:__\b\b");
       fgets(account,20,stdin);
       account[strlen(account)-1]='\0';
-      printf("\t\t              密码:__\b\b");
+      printf("\t                                                     密码:__\b\b");
       fgets(passwd,50,stdin);
       passwd[strlen(passwd)-1]='\0';
 
@@ -75,7 +75,7 @@ show_menu:system("reset");
     }
     else if('2'==ch){
       //注册
-      printf("\t\t              账户名:_\b");
+      printf("\t                                                    账户名:_\b");
       fgets(account,20,stdin);
       if('\n'!=account[strlen(account)-1])
         while('\n'!=getchar());
@@ -84,18 +84,18 @@ show_menu:system("reset");
       snprintf(dest,200,"select * from passwd where account='%s'",account);
       if(mysql_query(&mysql,dest))
         //执行sql语句错误
-        printf("\t\t   服务器故障，请稍后再试!!!\n");
+        printf("\t                                         服务器故障，请稍后再试!!!\n");
       else{
         result=mysql_store_result(&mysql);
         if(0<mysql_num_rows(result)){
           //数据库存有记录
-              printf("\t\t      此用户名已存在，按回车继续!!!\n");
+              printf("\t                                 此用户名已存在，按回车继续!!!\n");
               mysql_free_result(result);
               getchar();
               goto show_menu;
         }
         //用户名不存在，继续输入密码完成注册
-        printf("\t\t              密码:_\b");
+        printf("\t                                                 密码:_\b");
         fgets(passwd,50,stdin);
         if('\n'!=passwd[strlen(passwd)-1])
           while('\n'!=getchar());
@@ -120,9 +120,9 @@ show_menu:system("reset");
             //所有步骤都成功,提交事务
             mysql_query(&mysql,"commit");
             puts("\t" Format_Single_Symbol);
-            printf("\t\t              注册成功\n");
-            printf("\t\t       用户名:%s\t密码:%s\n",account,passwd);
-            printf("\t\t             按回车继续...");
+            printf("\t                                          注册成功\n");
+            printf("\t                                     用户名:%s\t密码:%s\n",account,passwd);
+            printf("\t                                        按回车继续...");
             strncpy(login_name,account,20);
             getchar();
             goto show_profile;
@@ -132,7 +132,7 @@ show_menu:system("reset");
         }
         //注册失败
         puts(mysql_error(&mysql));
-        puts("\t\t             注册失败,按回车继续...");
+        puts("\t                                           注册失败,按回车继续...");
         getchar();
         mysql_free_result(result);
         exit(EXIT_FAILURE);

@@ -18,7 +18,7 @@ void alter_profile(void)
   mysql_set_character_set(&mysql,"utf8");
   system("reset");
   puts("\t" Format_Double_Symbol);
-  puts("\t|                       *修*改*信*息*                      |");
+  puts("\t|                                                 *修*改*信*息*                                                    |");
   puts("\t" Format_Double_Symbol);
   char dest[200]={'\0'};
   //构造sql语句查出所有的用户
@@ -35,12 +35,12 @@ void alter_profile(void)
     ch=tolower(ch);
     if('y'==ch){
       puts("\t" Format_Double_Symbol);
-      puts("\t|                       *朋*友*列*表*                      |");
+      puts("\t|                                              *朋*友*列*表*                                                   |");
       puts("\t" Format_Single_Symbol);
       while(row=mysql_fetch_row(result)){
-        printf("\t|姓名:%-17s    性别:%-7s   电话:%-16s|\n",row[0],row[1],row[3]);
-        printf("\t|生日:%-53s|\n",row[2]);
-        printf("\t|座右铭:%-55s|\n",row[4]);
+        printf("\t|姓名:%-37s    性别:%-27s   电话:%-36s|\n",row[0],row[1],row[3]);
+        printf("\t|生日:%-113s|\n",row[2]);
+        printf("\t|座右铭:%-115s|\n",row[4]);
         puts("\t" Format_Single_Symbol);
       }
     }

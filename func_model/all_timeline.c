@@ -22,15 +22,15 @@ void all_timeline(void)
       char*p_event=NULL;//指向事件字符串的指针
       int eve_char_num;//指示一个事件占用的字符数
       puts("\t" Format_Double_Symbol);
-      puts("\t|                      *事*件*集*                          |");
-      puts("\t|                                                          |");
+      puts("\t|                                                    *事*件*集*                                                        |");
+      puts("\t|                                                                                                                      |");
       puts("\t" Format_Single_Symbol);
       format_timeline(result);//格式化输出事件集
       mysql_free_result(result);
       puts("\t" Format_Double_Symbol);
-      puts("\t|                     *菜*单*导*航*                        |");
-      puts("\t|                                                          |");
-      puts("\t| a:增加事件     b:修改事件      c:删除事件     d:返回主页 |");
+      puts("\t|                                                  *菜*单*导*航*                                                       |");
+      puts("\t|                                                                                                                      |");
+      puts("\t|               a:增加事件                b:修改事件                c:删除事件                d:返回主页               |");
       printf("\n\t请选择:_\b");
       char ch;
       while(1!=scanf("%[a-d,A-D]",&ch)){

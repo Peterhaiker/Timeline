@@ -16,10 +16,10 @@ void add_timeline(void)
   mysql_set_character_set(&mysql,"utf8");
   printf("\t输入事件执行者:_\b");
   char executor[20]={'\0'};
-  char event[600]={'\0'};
+  char event[122]={'\0'};
   char exec_time[21]={'\0'};
   char state[12]={'\0'};
-  char dest[700]={'\0'};
+  char dest[300]={'\0'};
   while(1){
     fgets(executor,20,stdin);
     if('\n'==executor[strlen(executor)-1]){
@@ -101,9 +101,9 @@ void add_timeline(void)
     }
   }
   //时间输入完毕，开始输入事件
-  printf("\t输入事件内容(上限200):_\b");
+  printf("\t输入事件内容(上限40):_\b");
   while(1){
-    fgets(event,600,stdin);
+    fgets(event,122,stdin);
     if('\n'==event[strlen(event)-1]){
       //未超过上限
       event[strlen(event)-1]='\0';
@@ -119,7 +119,7 @@ void add_timeline(void)
   char quotation_marks='\'';
   if(NULL!=strchr(event,'\''))
     quotation_marks='"';
-  snprintf(dest,700,"insert into %s_event values('%s',%c%s%c,'%s','%s')",login_name,executor,quotation_marks,event,quotation_marks,exec_time,"未完成");
+  snprintf(dest,300,"insert into %s_event values('%s',%c%s%c,'%s','%s')",login_name,executor,quotation_marks,event,quotation_marks,exec_time,"未完成");
   if(!mysql_query(&mysql,dest)){
     if(NULL!=strchr(event,';'))
       mysql_query(&mysql,"delimiter ;");

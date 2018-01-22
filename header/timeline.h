@@ -13,8 +13,8 @@
 #include<time.h>
 #include<mysql/mysql.h>
 
-#define Format_Double_Symbol "============================================================"
-#define Format_Single_Symbol "------------------------------------------------------------"
+#define Format_Double_Symbol "========================================================================================================================"
+#define Format_Single_Symbol "------------------------------------------------------------------------------------------------------------------------"
 static const char*HOSTNAME="localhost";
 static const char*USERNAME="root";
 static const char*PASSWORD="2391457146";
