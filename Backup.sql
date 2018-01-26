@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.20, for Linux (i686)
+-- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
 --
 -- Host: localhost    Database: timeline
 -- ------------------------------------------------------
--- Server version	5.7.20-0ubuntu0.16.04.1
+-- Server version	5.7.21-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,11 +23,14 @@ DROP TABLE IF EXISTS `刘海亮_event`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `刘海亮_event` (
+  `id` int(3) NOT NULL AUTO_INCREMENT,
   `executor` varchar(20) NOT NULL,
   `event` varchar(200) NOT NULL,
   `exec_time` datetime NOT NULL,
-  `state` varchar(5) DEFAULT '未完成'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `state` varchar(5) DEFAULT '未完成',
+  PRIMARY KEY (`id`),
+  KEY `executor_index` (`executor`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,7 +39,7 @@ CREATE TABLE `刘海亮_event` (
 
 LOCK TABLES `刘海亮_event` WRITE;
 /*!40000 ALTER TABLE `刘海亮_event` DISABLE KEYS */;
-INSERT INTO `刘海亮_event` VALUES ('刘海亮','完成timeline数据备份功能\n','2018-01-22 12:00:00','未完成');
+INSERT INTO `刘海亮_event` VALUES (1,'刘海亮','完成timeline数据备份功能\n','2018-01-22 12:00:00','未完成');
 /*!40000 ALTER TABLE `刘海亮_event` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -48,13 +51,15 @@ DROP TABLE IF EXISTS `刘海亮_profile`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `刘海亮_profile` (
+  `id` int(3) NOT NULL AUTO_INCREMENT,
   `account` varchar(20) NOT NULL,
   `sex` varchar(2) DEFAULT NULL,
   `birth` date DEFAULT NULL,
   `phone` varchar(14) DEFAULT NULL,
   `motto` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`account`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='刘海亮用户的好友列表';
+  PRIMARY KEY (`id`),
+  KEY `account_index` (`account`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='刘海亮用户的好友列表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,7 +68,7 @@ CREATE TABLE `刘海亮_profile` (
 
 LOCK TABLES `刘海亮_profile` WRITE;
 /*!40000 ALTER TABLE `刘海亮_profile` DISABLE KEYS */;
-INSERT INTO `刘海亮_profile` VALUES ('刘海亮','男','1996-08-03','18593488685','不忘初心'),('李博',NULL,NULL,NULL,NULL);
+INSERT INTO `刘海亮_profile` VALUES (1,'刘海亮','男','1996-08-03','18593488685','不忘初心'),(2,'李博',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `刘海亮_profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -75,10 +80,12 @@ DROP TABLE IF EXISTS `passwd`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `passwd` (
+  `id` int(3) NOT NULL AUTO_INCREMENT,
   `account` varchar(20) NOT NULL COMMENT '账户名',
   `passwd` varchar(50) NOT NULL,
-  PRIMARY KEY (`account`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `account_index` (`account`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,7 +94,7 @@ CREATE TABLE `passwd` (
 
 LOCK TABLES `passwd` WRITE;
 /*!40000 ALTER TABLE `passwd` DISABLE KEYS */;
-INSERT INTO `passwd` VALUES ('刘海亮','*CC67043C7BCFF5EEA5566BD9B1F3C74FD9A5CF5D');
+INSERT INTO `passwd` VALUES (1,'刘海亮','*CC67043C7BCFF5EEA5566BD9B1F3C74FD9A5CF5D');
 /*!40000 ALTER TABLE `passwd` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -100,4 +107,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-22 11:10:17
+-- Dump completed on 2018-01-26 19:30:51
