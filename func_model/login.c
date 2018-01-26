@@ -43,12 +43,24 @@ show_menu:system("reset");
     if('1'==ch){
       //登录
       printf("\t                                                     账户名:__\b\b");
+      while(1){
       fgets(account,20,stdin);
+      if(NULL!=strpbrk(account,"-/#\"'")){
+        fprintf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
+        continue;
+      }
       account[strlen(account)-1]='\0';
-      printf("\t                                                     密码:__\b\b");
-      fgets(passwd,50,stdin);
-      passwd[strlen(passwd)-1]='\0';
+      }
 
+      printf("\t                                                     密码:__\b\b");
+      while(1){
+        fgets(passwd,50,stdin);
+        if(NULL!=strpbrk(passwd,"-/#\"'")){
+          fprintf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
+          continue;
+        }
+      }
+      passwd[strlen(passwd)-1]='\0';
       //构造sql语句
       snprintf(dest,200,"select * from passwd where account='%s' and passwd=password('%s')",account,passwd);
       if(mysql_query(&mysql,dest)){
@@ -76,12 +88,19 @@ show_menu:system("reset");
     else if('2'==ch){
       //注册
       printf("\t                                                    账户名:_\b");
-      fgets(account,20,stdin);
-      if('\n'!=account[strlen(account)-1])
-        while('\n'!=getchar());
+      while(1){
+        fgets(account,20,stdin);
+        if('\n'!=account[strlen(account)-1])
+          while('\n'!=getchar());
+        //检测是否有不合法字符
+        if(NULL!=strpbrk(account,"-/#\"'")){
+          fprintf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
+          continue;
+        }
+      }
       account[strlen(account)-1]='\0';
       //确定此用户名是否已存在
-      snprintf(dest,200,"select * from passwd where account='%s'",account);
+      snprintf(dest,200,"select account from passwd where account='%s'",account);
       if(mysql_query(&mysql,dest))
         //执行sql语句错误
         printf("\t                                         服务器故障，请稍后再试!!!\n");
@@ -96,9 +115,15 @@ show_menu:system("reset");
         }
         //用户名不存在，继续输入密码完成注册
         printf("\t                                                 密码:_\b");
-        fgets(passwd,50,stdin);
-        if('\n'!=passwd[strlen(passwd)-1])
-          while('\n'!=getchar());
+        while(1){
+          fgets(passwd,50,stdin);
+          if('\n'!=passwd[strlen(passwd)-1])
+            while('\n'!=getchar());
+          if(NULL!=strpbrk(passwd,"-/#\"'")){
+            fprintf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
+            continue;
+          }
+        }
         passwd[strlen(passwd)-1]='\0';
         //创建mysql事务，只有所有步骤都成功才注册成功
         if(!mysql_query(&mysql,"set autocommit=0")&&!mysql_query(&mysql,"start transaction")){

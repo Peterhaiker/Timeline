@@ -21,6 +21,11 @@ void add_fri(void)
     if(NULL==strchr(name,'\n')){
       printf("\t名字太长了(上限 20)，重新输入:_\b");
       while('\n'!=getchar());
+      continue;
+    }
+    else if(NULL!=strpbrk(name,"-#/*'\"")){
+      printf("有不合法字符，重新输入:_\b");
+      continue;
     }
     else{
       name[strlen(name)-1]='\0';
@@ -102,13 +107,19 @@ void add_fri(void)
       }
       printf("\t电话:_\b");
       while(1){
-        fgets(phone,15,stdin);
+phone_again:fgets(phone,15,stdin);
         if(NULL==strchr(phone,'\n')){
           printf("你不要以为我没读过书，有这么长的电话吗?重输:_\b");
           while('\n'!=getchar());
         }
         else{
           phone[strlen(phone)-1]='\0';
+          for(int i=0,char a=phone[i];a!='\0';i++){
+            if(!isdigit(phone[i])){
+              printf("输入不合法，请重新输入电话:_\b");
+              goto phone_again;
+            }
+          }
           break;
         }
       }
