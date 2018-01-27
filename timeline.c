@@ -18,6 +18,7 @@ MYSQL_ROW row;//定义行变量
 int main(int argc,char*argv[])
 {
   mysql_init(&mysql);
+  prepared_statement();
   login();
   while(1==home()){
     mysql_init(&mysql);

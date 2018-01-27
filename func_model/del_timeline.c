@@ -27,9 +27,12 @@ void del_timeline(void)
     name[strlen(name)-1]='\0';
     break;
   }
-  snprintf(dest,200,"select executor from %s_event where executor='%s'",login_name,name);
+  if(SELECT_EXECUTOR)
+    snprintf(dest,200,"set @var_pre='%s_event',@var_executor='%s';execute pre_select_executor using @var_pre,@var_executor",login_name,name);
+  else
+    snprintf(dest,200,"select executor from %s_event where executor='%s'",login_name,name);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
-    if(0<mysql_num_rows(result)){
+    if(NULL!=mysql_fetch_row(result)){
       //存在这个执行者，继续
       mysql_free_result(result);
       printf("\t输入这个事件的首尾5到10个字，中间用空格间隔:_\b");
@@ -40,27 +43,25 @@ void del_timeline(void)
           if(NULL!=(p_blank=strchr(event,' '))){
             *p_blank='%';
             event[strlen(event)-1]='\0';
-            if(NULL!=strchr(event,';'))
-              mysql_query(&mysql,"delimiter //");
-            char quotation_marks='\'';
-            if(NULL!=strchr(event,'"'))
-              quotation_marks='"';
-            snprintf(dest,200,"delete from %s_event where executor='%s' and event like %c%s%c",login_name,name,quotation_marks,event,quotation_marks);
-            puts(dest);
-            if(!mysql_query(&mysql,dest)){
-              if(NULL!=strchr(event,';'))
-                mysql_query(&mysql,"delimiter ;");
-              printf("\t删除成功，按回车继续...");
-              getchar();
-              return;
-            }
+            if(DEL_EVENT)
+              snprintf(dest,200,"set @var_pre='%s_event',@var_exe='%s',@var_eve='%s';execute pre_del_event using @var_pre,@var_exe,@var_eve",login_name,name,event);
             else{
               if(NULL!=strchr(event,';'))
-                mysql_query(&mysql,"delimiter ;");
-              printf("\t删除失败，按回车继续...");
-              getchar();
-              return;
+                mysql_query(&mysql,"delimiter //");
+              char quotation_marks='\'';
+              if(NULL!=strchr(event,'"'))
+                quotation_marks='"';
+              snprintf(dest,200,"delete from %s_event where executor='%s' and event like %c%s%c",login_name,name,quotation_marks,event,quotation_marks);
             }
+            if(!mysql_query(&mysql,dest))
+              printf("\t删除成功，按回车继续...");
+            else
+              printf("\t删除失败，按回车继续...");
+            if(false==DEL_EVENT)
+              if(NULL!=strchr(event,';'))
+                mysql_query(&mysql,"delimiter ;");
+            getchar();
+            return;
           }
           else{
             printf("\t请按提示正确输入:_\b");

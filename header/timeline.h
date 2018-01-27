@@ -11,6 +11,7 @@
 #define TIMELINE_H
 
 #include<time.h>
+#include<stdbool.h>
 #include<mysql/mysql.h>
 
 #define Format_Double_Symbol "========================================================================================================================"
@@ -24,6 +25,17 @@ extern MYSQL mysql;
 extern MYSQL_RES *result;
 extern MYSQL_ROW row;
 extern char login_name[20];
+
+//预编译语句名称
+extern bool SELECT_ACCOUNT;//确认账户是否存在
+extern bool SELECT_EXECUTOR;//选择执行者
+extern bool LOGIN;//登录
+extern bool ADD_ACCOUNT;//增加账户
+extern bool DEL_ACCOUNT;//删除账户
+extern bool DEL_PROFILE;//删除profile表记录
+extern bool DEL_EVENT;//删除event记录
+extern bool INS_PROFILE;//删除profile表记录
+extern bool INS_EVENT;//删除event表记录
 
 //功能接口
 int home(void);//主页
@@ -44,5 +56,6 @@ int del_account(void);//删除账户
 int setting(void);//设置
 void backup(void);//备份数据库
 int restore(void);//恢复数据库
+void prepared_statement(void);//实现大部分预编译语句
 
 #endif /* !TIMELINE_H */

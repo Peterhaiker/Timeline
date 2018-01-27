@@ -18,11 +18,11 @@ void alter_profile(void)
   mysql_set_character_set(&mysql,"utf8");
   system("reset");
   puts("\t" Format_Double_Symbol);
-  puts("\t|                                                 *修*改*信*息*                                                    |");
+  puts("\t|                                                 *修*改*信*息*                                                       |");
   puts("\t" Format_Double_Symbol);
-  char dest[200]={'\0'};
+  char dest[300]={'\0'};
   //构造sql语句查出所有的用户
-  snprintf(dest,200,"select * from %s_profile",login_name);
+  snprintf(dest,300,"prepare pre_all_profile from 'select * from ?';set @var_pre_pro='%s_profile';execute pre_all_profile using @var_pre_pro",login_name);
   if((!mysql_query(&mysql,dest))&&(NULL!=(result=mysql_store_result(&mysql)))){
     //获取数据成功
     printf("\t显示所有朋友?(y/n):_\b");
@@ -54,7 +54,10 @@ void alter_profile(void)
     fgets(account_name,20,stdin);
     account_name[strlen(account_name)-1]='\0';
     while(1){
-      snprintf(dest,200,"select * from %s_profile where account='%s'",login_name,account_name);
+      if(SELECT_ACCOUNT)
+        snprintf(dest,300,"set @var_pre='%s_profile',@var_acc='%s';execute pre_select_account using @var_pre,@var_acc",login_name,account_name);
+      else
+        snprintf(dest,300,"select account from %s_profile where account='%s'",login_name,account_name);
       if((!mysql_query(&mysql,dest))&&(NULL!=(result=mysql_store_result(&mysql)))){
         if(1==mysql_num_rows(result)){
           //查到该用户名
@@ -168,7 +171,8 @@ void alter_profile(void)
       quotation_marks='"';
     if(strchr(new_motto,';'))
       mysql_query(&mysql,"delimiter //");
-    snprintf(dest,200,"update %s_profile set sex='%s',birth='%s',phone='%s',motto=%c%s%c",login_name,new_sex,new_birth,new_phone,quotation_marks,new_motto,quotation_marks);
+    //这里的profile没有用预编译，存在潜在危险
+    snprintf(dest,300,"update %s_profile set sex='%s',birth='%s',phone='%s',motto=%c%s%c",login_name,new_sex,new_birth,new_phone,quotation_marks,new_motto,quotation_marks);
     if(!mysql_query(&mysql,dest)){
       //更新成功
       puts("\t更新成功，按回车继续...");
@@ -184,6 +188,7 @@ void alter_profile(void)
   }
   else{
     puts("\t数据库发生错误，按回车继续...");
+    puts(mysql_error(&mysql));
   }
   getchar();
   return;

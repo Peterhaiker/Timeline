@@ -8,6 +8,7 @@
 
 #include<stdio.h>
 #include<string.h>
+#include<ctype.h>
 #include<time.h>
 #include"../header/timeline.h"
 
@@ -33,11 +34,14 @@ void add_fri(void)
     }
   }
   //名字输入成功，开始检测是否有这个好友
-  char dest[200]={'\0'};
-  snprintf(dest,200,"select account from %s_profile where account='%s'",login_name,name);
+  char dest[300]={'\0'};
+  if(SELECT_ACCOUNT)
+    snprintf(dest,300,"set @var_pre_profile='%s_profile',@var_acc='%s';execute pre_select_account using @var_pre_profile,@var_acc",login_name,name);
+  else
+    snprintf(dest,300,"select account from %s_profile where account='%s'",login_name,name);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
     //获取结果成功且取到结果集
-    if(0<mysql_num_rows(result)){
+    if(NULL!=mysql_fetch_row(result)){
       //该好友已存在
       printf("\t该好友已存在，按回车继续...");
       getchar();
@@ -114,7 +118,7 @@ phone_again:fgets(phone,15,stdin);
         }
         else{
           phone[strlen(phone)-1]='\0';
-          for(int i=0,char a=phone[i];a!='\0';i++){
+          for(int i=0;phone[i]!='\0';i++){
             if(!isdigit(phone[i])){
               printf("输入不合法，请重新输入电话:_\b");
               goto phone_again;
@@ -134,16 +138,22 @@ phone_again:fgets(phone,15,stdin);
         }
       }
       //开始写入好友信息
-      char quotation_marks='\'';
-      if(strchr(motto,';'))
-        mysql_query(&mysql,"delimiter //");
-      if(strchr(motto,'\''))
-        quotation_marks='"';
-      snprintf(dest,200,"insert into %s_profile values('%s','%s','%s','%s',%c%s%c)",login_name,name,sex,birth,phone,quotation_marks,motto,quotation_marks);
+      if(INS_PROFILE)
+        snprintf(dest,300,"set @var_pre_profile='%s_profile(',@var_acc='%s',@var_sex='%s',@var_birth='%s',@var_phone='%s',@var_motto='%s';execute pre_ins_profile using @var_pre_profile,@var_acc,@var_sex,@var_birth,@var_phone,@var_motto",login_name,name,sex,birth,phone,motto);
+      else{
+        char quotation_marks='\'';
+        if(NULL!=strchr(motto,'\''))
+          quotation_marks='\"';
+        if(NULL!=strchr(motto,';'))
+          mysql_query(&mysql,"delimiter //");
+        snprintf(dest,300,"insert into %s_profile(account,sex,birth,phone,motto) values('%s','%s','%s','%s',%c%s%c)",login_name,name,sex,birth,phone,quotation_marks,motto,quotation_marks);
+      }
       if(!mysql_query(&mysql,dest))
         printf("\t写入成功，按回车继续...");
-      if(strchr(motto,';'))
-        mysql_query(&mysql,"delimiter ;");
+      if(false==INS_PROFILE){
+        if(NULL!=strchr(motto,';'))
+          mysql_query(&mysql,"delimiter ;");
+      }
     }
   }
   else{

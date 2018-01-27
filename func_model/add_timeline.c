@@ -24,6 +24,10 @@ void add_timeline(void)
     fgets(executor,20,stdin);
     if('\n'==executor[strlen(executor)-1]){
       executor[strlen(executor)-1]='\0';
+      if(NULL!=strpbrk(executor,"/*#-'\"")){
+        printf("\t输入不合法，重新输入(不可包含/*#-'\"):_\b");
+        continue;
+      }
       break;
     }
     else{
@@ -114,25 +118,27 @@ void add_timeline(void)
       while('\n'!=getchar());
     }
   }
-  if(NULL!=strchr(event,';'))
-    mysql_query(&mysql,"delimiter //");
-  char quotation_marks='\'';
-  if(NULL!=strchr(event,'\''))
-    quotation_marks='"';
-  snprintf(dest,300,"insert into %s_event values('%s',%c%s%c,'%s','%s')",login_name,executor,quotation_marks,event,quotation_marks,exec_time,"未完成");
-  if(!mysql_query(&mysql,dest)){
+  if(INS_EVENT)
+    snprintf(dest,300,"set @var_pre_event='%s_event(',@var_executor='%s',@var_event='%s',@var_exec_time='%s';execute pre_ins_event using @var_pre_event,@var_executor,@var_event,@var_exec_time",login_name,executor,event,exec_time);
+  else{
+    char quotation_marks='\'';
+    if(NULL!=strchr(event,'\''))
+      quotation_marks='\"';
     if(NULL!=strchr(event,';'))
-      mysql_query(&mysql,"delimiter ;");
+      mysql_query(&mysql,"delimiter //");
+    snprintf(dest,300,"insert into %s_event(executor,event,exec_time) values('%s','%s',%c%s%c)",login_name,executor,event,quotation_marks,exec_time,quotation_marks);
+  }
+  if(!mysql_query(&mysql,dest)){
     printf("\t事件已增加，按回车继续...");
     getchar();
-    return;
   }
   else{
     printf("\t事件增加失败，按回车继续...");
     puts(mysql_error(&mysql));
+  }
+  if(false==INS_EVENT){
     if(NULL!=strchr(event,';'))
-      mysql_query(&mysql,"delimiter ;");
-    return;
+      mysql_query(&mysql,"delimiter //");
   }
   return;
 }

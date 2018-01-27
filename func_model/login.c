@@ -19,7 +19,7 @@ void login(void)
   char*sql=NULL;
   char dest[200]={'\0'};
   char ch;
-  if(!mysql_real_connect(&mysql,HOSTNAME,USERNAME,PASSWORD,DBNAME,0,NULL,0)){
+  if(!mysql_real_connect(&mysql,HOSTNAME,USERNAME,PASSWORD,DBNAME,0,NULL,CLIENT_MULTI_RESULTS)){
     printf("\t连接数据库出错，请稍后再试!!!\n");
     sleep(1);
     exit(EXIT_FAILURE);
@@ -44,25 +44,30 @@ show_menu:system("reset");
       //登录
       printf("\t                                                     账户名:__\b\b");
       while(1){
-      fgets(account,20,stdin);
-      if(NULL!=strpbrk(account,"-/#\"'")){
-        fprintf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
-        continue;
-      }
-      account[strlen(account)-1]='\0';
+        fgets(account,20,stdin);
+        if(NULL!=strpbrk(account,"-/#\"'")){
+          printf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
+          continue;
+        }
+        account[strlen(account)-1]='\0';
+        break;
       }
 
       printf("\t                                                     密码:__\b\b");
       while(1){
         fgets(passwd,50,stdin);
         if(NULL!=strpbrk(passwd,"-/#\"'")){
-          fprintf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
+          printf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
           continue;
         }
+       break;
       }
       passwd[strlen(passwd)-1]='\0';
       //构造sql语句
-      snprintf(dest,200,"select * from passwd where account='%s' and passwd=password('%s')",account,passwd);
+      if(LOGIN)
+        snprintf(dest,200,"set @var_acc='%s',@var_pas='%s';execute pre_login using @var_acc,@var_pas",account,passwd);
+      else
+        snprintf(dest,200,"select account,passwd from passwd where account='%s' and passwd=password('%s')",account,passwd);
       if(mysql_query(&mysql,dest)){
         //sql语句执行失败
         printf("\t服务器故障，请稍后再试!!!按回车继续...\n");
@@ -94,19 +99,22 @@ show_menu:system("reset");
           while('\n'!=getchar());
         //检测是否有不合法字符
         if(NULL!=strpbrk(account,"-/#\"'")){
-          fprintf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
+          printf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
           continue;
         }
       }
       account[strlen(account)-1]='\0';
       //确定此用户名是否已存在
-      snprintf(dest,200,"select account from passwd where account='%s'",account);
+      if(SELECT_ACCOUNT)
+        snprintf(dest,200,"set @var_acc='%s';execute pre_select_account using @var_acc",account);
+      else
+        snprintf(dest,200,"select account from passwd where account='%s'",account);
       if(mysql_query(&mysql,dest))
         //执行sql语句错误
         printf("\t                                         服务器故障，请稍后再试!!!\n");
       else{
         result=mysql_store_result(&mysql);
-        if(0<mysql_num_rows(result)){
+        if(NULL!=mysql_fetch_row(result)){
           //数据库存有记录
               printf("\t                                 此用户名已存在，按回车继续!!!\n");
               mysql_free_result(result);
@@ -120,7 +128,7 @@ show_menu:system("reset");
           if('\n'!=passwd[strlen(passwd)-1])
             while('\n'!=getchar());
           if(NULL!=strpbrk(passwd,"-/#\"'")){
-            fprintf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
+            printf("有不合法字符，请重新输入(不可带有-,#,/,',\"字符):_\b");
             continue;
           }
         }
@@ -130,16 +138,22 @@ show_menu:system("reset");
           //开始事务
           char sign_up_sql[200]={'\0'};
           //构造sql插入语句
-          snprintf(sign_up_sql,200,"insert into passwd(account,passwd) values('%s',password('%s'))",account,passwd);
-          //构造sql语句创建profile表
-          char profile_sql[200]={'\0'};
-          snprintf(profile_sql,200,"create table %s_profile(account varchar(20) not null primary key,sex varchar(2),birth date,phone varchar(14),motto varchar(50))",account);
+          if(ADD_ACCOUNT)
+            snprintf(sign_up_sql,200,"set @var_acc='%s',@var_pas='%s';execute pre_add_account using @var_acc,@var_pas",account,passwd);
+          else
+            snprintf(sign_up_sql,200,"insert into passwd(account,passwd) values('%s',password('%s'))",account,passwd);
+          //构造sql语句创建profile表的预编译语句
+          char profile_sql[400]={'\0'};
+          snprintf(profile_sql,400,"prepare pre_cre_profile from 'create table ? id int(3) not null primary key auto_increment,account varchar(20) not null,sex varchar(2),birth date,phone varchar(14),motto varchar(50))';set @var_prefix_profile='%s_profile(';execute pre_cre_profile using @var_prefix_profile;drop prepare pre_cre_profile",account);
           //构造成功的情况下，接下来向这个表写入自己的信息,首先构造插入数据的sql语句
           char insert_profile[200]={'\0'};
-          snprintf(insert_profile,200,"insert into %s_profile(account) values('%s')",account,account);
+          if(INS_PROFILE)
+            snprintf(insert_profile,200,"set @var_pre_profile='%s_profile',@var_acc='%s';execute pre_ins_profile using @var_pre_profile,@var_acc,@var_sex,@var_birth,@var_phone,@var_motto",login_name,account);
+          else
+            snprintf(insert_profile,200,"insert into %s_profile(account) values('%s')",login_name,account);
           //构造sql语句创建event表
-          char event_sql[200]={'\0'};
-          snprintf(event_sql,200,"create table %s_event(executor varchar(20) not null,event varchar(200) not null,exec_time datetime not null,state varchar(5) default '未完成')",account);
+          char event_sql[400]={'\0'};
+          snprintf(event_sql,400,"prepare pre_cre_event from 'create table ? id int(3) not null primary key auto_increment,executor varchar(20) not null,event varchar(200) not null,exec_time datetime not null,state varchar(5) default '未完成')';set @var_prefix_event='%s_event(';execute pre_cre_event using @var_prefix_event;drop prepare pre_cre_event",account);
           //执行sql语句
           if(!mysql_query(&mysql,sign_up_sql)&&!mysql_query(&mysql,profile_sql)&&!mysql_query(&mysql,insert_profile)&&!mysql_query(&mysql,event_sql)){
             //所有步骤都成功,提交事务

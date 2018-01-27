@@ -29,7 +29,10 @@ void alter_timeline(void)
     break;
   }
 
-  snprintf(dest,300,"select executor from %s_event where executor='%s'",login_name,executor);
+  if(SELECT_EXECUTOR)
+    snprintf(dest,300,"set @var_pre='%s_event',@var_exe='%s';execute pre_select_executor using @var_pre,@var_exe",login_name,executor);
+  else
+    snprintf(dest,300,"select executor from %s_event where executor='%s'",login_name,executor);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
     if(0>=mysql_num_rows(result)){
       fprintf(stderr,"\t没有这个执行者，按回车继续...");
@@ -60,12 +63,7 @@ void alter_timeline(void)
   char *p_blank=NULL;
   if(NULL!=(p_blank=strchr(event,' ')))
     *p_blank='%';
-  char quotation_marks='\'';
-  if(NULL!=strchr(event,'\''))
-    quotation_marks='"';
-  if(NULL!=strchr(event,';'))
-    mysql_query(&mysql,"delimiter //");
-  snprintf(dest,300,"select * from %s_profile where executor='%s' and event like %c%s%c",login_name,executor,quotation_marks,event,quotation_marks);
+  snprintf(dest,300,"prepare pre_sel_all_profile from 'select * from ? where executor=? and event like ?';set @var_pre='%s_profile',@var_exe='%s',@var_eve='%s';execute pre_sel_all_profile using @var_pre,@var_exe,@var_eve;drop prepare pre_select_executor",login_name,executor,event);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
     format_timeline(result);
     mysql_free_result(result);
@@ -189,51 +187,55 @@ void alter_timeline(void)
     }
     break;
   }
-  //构造更新记录语句
-  snprintf(dest,300,"update ");
+  //构造更新记录预编译语句
+  snprintf(dest,300,"prepare pre_update_event from 'update ? set ");
+  if(0!=strlen(new_executor))
+    strncat(dest,"executor=?,",300);
+  if(0!=strlen(new_event))
+    strncat(dest,"event=?,",300);
+  if(0!=strlen(new_time))
+    strncat(dest,"exec_time=?,",300);
+  if(0!=strlen(new_state))
+    strncat(dest,"state=?,",300);
+  dest[strlen(dest)-1]='\0';
+  strncat(dest," where executor=?",300);
+  strncat(dest,executor,300);
+  strncat(dest," and event like ?';set",300);
+  //设置变量
+  strncat(dest," @pre_pre_event=",300);
   strncat(dest,login_name,300);
-  strncat(dest,"_event set ",300);
+  strncat(dest,"_event,",300);
   if(0!=strlen(new_executor)){
-    strncat(dest,"executor='",300);
+    strncat(dest," @pre_executor=",300);
     strncat(dest,new_executor,300);
-    strncat(dest,"',",300);
+    strncat(dest,",",300);
   }
   if(0!=strlen(new_event)){
-    if(NULL!=strchr(new_event,'\''))
-      strncat(dest,"event=\"",300);
-    else
-      strncat(dest,"event='",300);
+    strncat(dest," @pre_event=",300);
     strncat(dest,new_event,300);
-    if(NULL!=strchr(new_event,'\''))
-      strncat(dest,"\",",300);
-    else
-      strncat(dest,"',",300);
+    strncat(dest,",",300);
   }
   if(0!=strlen(new_time)){
-    strncat(dest,"exec_time='",300);
+    strncat(dest," @pre_time=",300);
     strncat(dest,new_time,300);
-    strncat(dest,"',",300);
+    strncat(dest,",",300);
   }
   if(0!=strlen(new_state)){
-    strncat(dest,"state='",300);
+    strncat(dest," @pre_state=",300);
     strncat(dest,new_state,300);
-    strncat(dest,"',",300);
+    strncat(dest,",",300);
   }
-  dest[strlen(dest)-1]='\0';
-  strncat(dest," where executor='",300);
-  strncat(dest,executor,300);
-  strncat(dest,"' and event like ",300);
-  if(NULL!=strchr(event,'\''))
-    strncat(dest,"\"",300);
-  else
-    strncat(dest,"\'",300);
-  strncat(dest,event,300);
-  if(NULL!=strchr(event,'\''))
-    strncat(dest,"\"",300);
-  else
-    strncat(dest,"\'",300);
-  if(NULL!=strchr(event,';'))
-    mysql_query(&mysql,"delimiter //");
+  snprintf(dest+strlen(dest),300-strlen(dest)," @pre_exe='%s',@pre_eve='%s';execute pre_update_event using ",new_executor,new_event);
+  strncat(dest,"@pre_pre_event,",300);
+  if(0!=strlen(new_executor))
+    strncat(dest,"@pre_executor,",300);
+  if(0!=strlen(new_event))
+    strncat(dest,"@pre_event,",300);
+  if(0!=strlen(new_time))
+    strncat(dest,"@pre_time,",300);
+  if(0!=strlen(new_state))
+    strncat(dest,"@pre_state,",300);
+  strncat(dest,"@pre_exe,@pre_eve;drop prepare pre_update_event",300);
   //更新记录
   if(!mysql_query(&mysql,dest))
     printf("\t修改成功，按回车继续...");
@@ -242,7 +244,5 @@ void alter_timeline(void)
     //puts(mysql_error(&mysql));
   }
     getchar();
-  if(NULL!=strchr(event,';'))
-    mysql_query(&mysql,"delimiter ;");
   return;
 }

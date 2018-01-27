@@ -16,9 +16,9 @@ void format_timeline(MYSQL_RES*result)
   assert(result);//判断传入的是否为空指针
 
   for(unsigned long long row_num=mysql_num_rows(result);row=mysql_fetch_row(result);){
-   printf("\t|%-40s%-50s%34s|\n",row[0],row[2],row[3]);
+   printf("\t|%-40s%-50s%34s|\n",row[1],row[3],row[4]);
    //格式化输出事件
-       printf("\t|%.118s\n",row[1]);
+       printf("\t|%.118s\n",row[2]);
    if(--row_num)
      puts("\t" Format_Single_Symbol);
   }
