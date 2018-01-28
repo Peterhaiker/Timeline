@@ -30,11 +30,11 @@ void alter_timeline(void)
   }
 
   if(SELECT_EXECUTOR)
-    snprintf(dest,300,"set @var_pre='%s_event',@var_exe='%s';execute pre_select_executor using @var_pre,@var_exe",login_name,executor);
+    snprintf(dest,300,"set @var_exe='%s';execute pre_select_executor using @var_exe",executor);
   else
     snprintf(dest,300,"select executor from %s_event where executor='%s'",login_name,executor);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
-    if(0>=mysql_num_rows(result)){
+    if(NULL==mysql_fetch_row(result)){
       fprintf(stderr,"\t没有这个执行者，按回车继续...");
       mysql_free_result(result);
       getchar();
@@ -63,7 +63,7 @@ void alter_timeline(void)
   char *p_blank=NULL;
   if(NULL!=(p_blank=strchr(event,' ')))
     *p_blank='%';
-  snprintf(dest,300,"prepare pre_sel_all_profile from 'select * from ? where executor=? and event like ?';set @var_pre='%s_profile',@var_exe='%s',@var_eve='%s';execute pre_sel_all_profile using @var_pre,@var_exe,@var_eve;drop prepare pre_select_executor",login_name,executor,event);
+  snprintf(dest,300,"prepare pre_sel_all_profile from 'select * from %s_event where executor=? and event like ?';set @var_exe='%s',@var_eve='%s';execute pre_sel_all_profile using @var_exe,@var_eve;drop prepare pre_select_executor",login_name,executor,event);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
     format_timeline(result);
     mysql_free_result(result);
@@ -188,7 +188,7 @@ void alter_timeline(void)
     break;
   }
   //构造更新记录预编译语句
-  snprintf(dest,300,"prepare pre_update_event from 'update ? set ");
+  snprintf(dest,300,"prepare pre_update_event from 'update %s_event set ",login_name);
   if(0!=strlen(new_executor))
     strncat(dest,"executor=?,",300);
   if(0!=strlen(new_event))
@@ -199,34 +199,29 @@ void alter_timeline(void)
     strncat(dest,"state=?,",300);
   dest[strlen(dest)-1]='\0';
   strncat(dest," where executor=?",300);
-  strncat(dest,executor,300);
   strncat(dest," and event like ?';set",300);
   //设置变量
-  strncat(dest," @pre_pre_event=",300);
-  strncat(dest,login_name,300);
-  strncat(dest,"_event,",300);
   if(0!=strlen(new_executor)){
-    strncat(dest," @pre_executor=",300);
+    strncat(dest," @pre_executor='",300);
     strncat(dest,new_executor,300);
-    strncat(dest,",",300);
+    strncat(dest,"',",300);
   }
   if(0!=strlen(new_event)){
-    strncat(dest," @pre_event=",300);
+    strncat(dest," @pre_event='",300);
     strncat(dest,new_event,300);
-    strncat(dest,",",300);
+    strncat(dest,"',",300);
   }
   if(0!=strlen(new_time)){
-    strncat(dest," @pre_time=",300);
+    strncat(dest," @pre_time='",300);
     strncat(dest,new_time,300);
-    strncat(dest,",",300);
+    strncat(dest,"',",300);
   }
   if(0!=strlen(new_state)){
-    strncat(dest," @pre_state=",300);
+    strncat(dest," @pre_state='",300);
     strncat(dest,new_state,300);
-    strncat(dest,",",300);
+    strncat(dest,"',",300);
   }
-  snprintf(dest+strlen(dest),300-strlen(dest)," @pre_exe='%s',@pre_eve='%s';execute pre_update_event using ",new_executor,new_event);
-  strncat(dest,"@pre_pre_event,",300);
+  snprintf(dest+strlen(dest),300-strlen(dest)," @pre_exe='%s',@pre_eve='%s';execute pre_update_event using ",executor,event);
   if(0!=strlen(new_executor))
     strncat(dest,"@pre_executor,",300);
   if(0!=strlen(new_event))
@@ -236,6 +231,7 @@ void alter_timeline(void)
   if(0!=strlen(new_state))
     strncat(dest,"@pre_state,",300);
   strncat(dest,"@pre_exe,@pre_eve;drop prepare pre_update_event",300);
+  puts(dest);
   //更新记录
   if(!mysql_query(&mysql,dest))
     printf("\t修改成功，按回车继续...");

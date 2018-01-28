@@ -38,15 +38,15 @@ void del_fri(void)
   }
   char dest[200]={'\0'};
   //查询是否存在这个好友
-  if(SELECT_ACCOUNT)
-    snprintf(dest,200,"set @var_pre_profile='%s_profile',@var_acc='%s';execute pre_select_account using @var_pre_profile,@var_acc",login_name,name);
+  if(SELECT_PROFILE_ACCOUNT)
+    snprintf(dest,200,"set @var_acc='%s';execute pre_sel_pro_acc using @var_acc",name);
   else
     snprintf(dest,200,"select account from %s_profile where account='%s'",login_name,name);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
     if(NULL!=mysql_fetch_row(result)){
       //存在这个好友，开始删除
       if(DEL_PROFILE)
-        snprintf(dest,200,"set @var_pre_profile='%s_profile',@var_acc='%s';execute pre_del_profile using @var_pre_profile,@var_acc",login_name,name);
+        snprintf(dest,200,"set @var_acc='%s';execute pre_del_profile using @var_acc",name);
       else
         snprintf(dest,200,"delete from %s_profile where account='%s'",login_name,name);
       if(!mysql_query(&mysql,dest)){

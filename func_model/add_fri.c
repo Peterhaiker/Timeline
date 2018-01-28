@@ -35,8 +35,8 @@ void add_fri(void)
   }
   //名字输入成功，开始检测是否有这个好友
   char dest[300]={'\0'};
-  if(SELECT_ACCOUNT)
-    snprintf(dest,300,"set @var_pre_profile='%s_profile',@var_acc='%s';execute pre_select_account using @var_pre_profile,@var_acc",login_name,name);
+  if(SELECT_PROFILE_ACCOUNT)
+    snprintf(dest,300,"set @var_acc='%s';execute pre_sel_pro_acc using @var_acc",name);
   else
     snprintf(dest,300,"select account from %s_profile where account='%s'",login_name,name);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
@@ -139,7 +139,7 @@ phone_again:fgets(phone,15,stdin);
       }
       //开始写入好友信息
       if(INS_PROFILE)
-        snprintf(dest,300,"set @var_pre_profile='%s_profile(',@var_acc='%s',@var_sex='%s',@var_birth='%s',@var_phone='%s',@var_motto='%s';execute pre_ins_profile using @var_pre_profile,@var_acc,@var_sex,@var_birth,@var_phone,@var_motto",login_name,name,sex,birth,phone,motto);
+        snprintf(dest,300,"set @var_acc='%s',@var_sex='%s',@var_birth='%s',@var_phone='%s',@var_motto='%s';execute pre_ins_profile using @var_acc,@var_sex,@var_birth,@var_phone,@var_motto",name,sex,birth,phone,motto);
       else{
         char quotation_marks='\'';
         if(NULL!=strchr(motto,'\''))

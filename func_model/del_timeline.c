@@ -28,7 +28,7 @@ void del_timeline(void)
     break;
   }
   if(SELECT_EXECUTOR)
-    snprintf(dest,200,"set @var_pre='%s_event',@var_executor='%s';execute pre_select_executor using @var_pre,@var_executor",login_name,name);
+    snprintf(dest,200,"set @var_executor='%s';execute pre_select_executor using @var_executor",name);
   else
     snprintf(dest,200,"select executor from %s_event where executor='%s'",login_name,name);
   if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
@@ -44,7 +44,7 @@ void del_timeline(void)
             *p_blank='%';
             event[strlen(event)-1]='\0';
             if(DEL_EVENT)
-              snprintf(dest,200,"set @var_pre='%s_event',@var_exe='%s',@var_eve='%s';execute pre_del_event using @var_pre,@var_exe,@var_eve",login_name,name,event);
+              snprintf(dest,200,"set @var_exe='%s',@var_eve='%s';execute pre_del_event using @var_exe,@var_eve",name,event);
             else{
               if(NULL!=strchr(event,';'))
                 mysql_query(&mysql,"delimiter //");

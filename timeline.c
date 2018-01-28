@@ -18,11 +18,14 @@ MYSQL_ROW row;//定义行变量
 int main(int argc,char*argv[])
 {
   mysql_init(&mysql);
-  prepared_statement();
+  mysql_options(&mysql,CLIENT_MULTI_STATEMENTS,0);
   login();
+  prepared_statement();
   while(1==home()){
     mysql_init(&mysql);
+    mysql_options(&mysql,CLIENT_MULTI_STATEMENTS,0);
     login();
+    prepared_statement();
   }
   return 0;
 }

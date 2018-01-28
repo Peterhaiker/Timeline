@@ -119,7 +119,7 @@ void add_timeline(void)
     }
   }
   if(INS_EVENT)
-    snprintf(dest,300,"set @var_pre_event='%s_event(',@var_executor='%s',@var_event='%s',@var_exec_time='%s';execute pre_ins_event using @var_pre_event,@var_executor,@var_event,@var_exec_time",login_name,executor,event,exec_time);
+    snprintf(dest,300,"set @var_executor='%s',@var_event='%s',@var_time='%s';execute pre_ins_event using @var_executor,@var_event,@var_time",executor,event,exec_time);
   else{
     char quotation_marks='\'';
     if(NULL!=strchr(event,'\''))

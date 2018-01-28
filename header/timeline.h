@@ -27,7 +27,8 @@ extern MYSQL_ROW row;
 extern char login_name[20];
 
 //预编译语句名称
-extern bool SELECT_ACCOUNT;//确认账户是否存在
+extern bool SELECT_PASSWD_ACCOUNT;//选择passwd表中的account记录
+extern bool SELECT_PROFILE_ACCOUNT;//选择profile表中的account记录
 extern bool SELECT_EXECUTOR;//选择执行者
 extern bool LOGIN;//登录
 extern bool ADD_ACCOUNT;//增加账户
@@ -57,5 +58,6 @@ int setting(void);//设置
 void backup(void);//备份数据库
 int restore(void);//恢复数据库
 void prepared_statement(void);//实现大部分预编译语句
+void test(void);
 
 #endif /* !TIMELINE_H */

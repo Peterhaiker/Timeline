@@ -21,3 +21,11 @@
 ### 依赖  
 * compiler support c99
 * mysql version 5+
+  * ubuntu install mysql-server
+      ```
+      sudo apt-get install mysql-server
+      ```
+  * install development pakage
+      ```
+      sudo apt-get install mysql-client libmysqlclient-dev
+      ```

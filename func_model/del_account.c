@@ -35,10 +35,10 @@ int del_account(void)
         if(!mysql_query(&mysql,dest)){
           //passwd记录删除成功，开始删除对应的event和profile表
           //先删profile表，构造预编译语句
-          snprintf(dest,200,"set @var_pre_profile='%s_profile';prepare del_profile from 'drop table ?';execute del_profile using @var_pre_profile;drop prepare del_profile",login_name);
+          snprintf(dest,200,"drop table %s_profile",login_name);
           if(!mysql_query(&mysql,dest)){
             //删除profile表成功，开始删除event表
-            snprintf(dest,200,"set @var_pre_event='%s_event';prepare del_event from 'drop table ?';execute del_event using @var_pre_event;drop prepare del_event",login_name);
+            snprintf(dest,200,"drop table %s_event",login_name);
             if(!mysql_query(&mysql,dest)){
               //都删除成功，直接返回
               if(!mysql_query(&mysql,"commit")){
