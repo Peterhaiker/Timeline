@@ -12,10 +12,10 @@
 
 void list_fri(void)
 {
+  char dest[200]={'\0'};
   while(1){
     system("reset");
     mysql_set_character_set(&mysql,"utf8");
-    char dest[200]={'\0'};
     snprintf(dest,200,"select * from %s_profile where account<>'%s'",login_name,login_name);
     if((!mysql_query(&mysql,dest))&&(NULL!=(result=mysql_store_result(&mysql)))){
       //sql语句执行成功且获取到结果集
@@ -24,9 +24,9 @@ void list_fri(void)
       if(0<mysql_num_rows(result)){
         while(row=mysql_fetch_row(result)){
           puts("\t" Format_Single_Symbol);
-          printf("\t|姓名:%-40s性别:%-39s好友数:%-26llu\n",row[0],row[1]?row[1]:"未知",mysql_num_rows(result)-1);
-          printf("\t|生日:%-47s电话:%-61s\n",row[2]?row[2]:"未知",row[3]?row[3]:"未知");
-          printf("\t|座右铭:%-115s\n",row[4]?row[4]:"未知");
+          printf("\t|姓名:%-40s性别:%-39s好友数:%-26llu\n",row[1],row[2]?row[2]:"未知",mysql_num_rows(result)-1);
+          printf("\t|生日:%-47s电话:%-61s\n",row[3]?row[3]:"未知",row[4]?row[4]:"未知");
+          printf("\t|座右铭:%-115s\n",row[5]?row[5]:"未知");
         }
       }
       else
@@ -54,6 +54,12 @@ void list_fri(void)
       }
 
     }//if
+    else{
+      fprintf(stderr,"\t获取朋友列表失败，按回车继续...");
+      puts(mysql_error(&mysql));
+      getchar();
+      return;
+    }
     //执行sql语句失败或未取到结果集
   }//while
   return;

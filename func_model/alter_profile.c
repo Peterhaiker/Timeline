@@ -16,6 +16,7 @@
 void alter_profile(void)
 {
   mysql_set_character_set(&mysql,"utf8");
+//  mysql_set_server_option(&mysql,MYSQL_OPTION_MULTI_STATEMENTS_ON);
   system("reset");
   puts("\t" Format_Double_Symbol);
   puts("\t|                                                 *修*改*信*息*                                                        |");
@@ -51,14 +52,39 @@ void alter_profile(void)
     char new_birth[15]={'\0'};
     char new_phone[14]={'\0'};
     char new_motto[50]={'\0'};
+    //输入要修改的账户名直到合法才退出循环
     fgets(account_name,20,stdin);
-    account_name[strlen(account_name)-1]='\0';
+    while(1){
+      if(NULL==strchr(account_name,'\n')){
+        printf("\t名字过长，重新输入(max 20):_\b");
+        while('\n'!=getchar());
+        continue;
+      }
+      if(NULL!=strpbrk(account_name,"/*#-'\"")){
+        printf("\t名字不能包含(/,#,*,-,',\")，重新输入:_\b");
+        continue;
+      }
+      account_name[strlen(account_name)-1]='\0';
+      break;
+    }
+
     while(1){
       if(SELECT_PROFILE_ACCOUNT)
         snprintf(dest,300,"set @var_acc='%s';execute pre_sel_pro_acc using @var_acc",account_name);
       else
         snprintf(dest,300,"select account from %s_profile where account='%s'",login_name,account_name);
-      if((!mysql_query(&mysql,dest))&&(NULL!=(result=mysql_store_result(&mysql)))){
+      if((!mysql_query(&mysql,dest))/*&&(NULL!=(result=mysql_store_result(&mysql)))*/){
+        result=mysql_store_result(&mysql);
+        //取第二个结果集
+        if(mysql_next_result(&mysql)==0){
+          mysql_free_result(result);
+          result=mysql_store_result(&mysql);
+        }
+        else{
+          fprintf(stderr,"\t数据库发生错误，按回车继续...");
+          getchar();
+          return;
+        }
         if(1==mysql_num_rows(result)){
           //查到该用户名
           break;
@@ -173,7 +199,7 @@ void alter_profile(void)
     if(strchr(new_motto,';'))
       mysql_query(&mysql,"delimiter //");
     //这里的profile没有用预编译，存在潜在危险
-    snprintf(dest,300,"update %s_profile set sex='%s',birth='%s',phone='%s',motto=%c%s%c",login_name,new_sex,new_birth,new_phone,quotation_marks,new_motto,quotation_marks);
+    snprintf(dest,300,"update %s_profile set sex='%s',birth='%s',phone='%s',motto=%c%s%c where account='%s'",login_name,new_sex,new_birth,new_phone,quotation_marks,new_motto,quotation_marks,account_name);
     if(!mysql_query(&mysql,dest)){
       //更新成功
       puts("\t更新成功，按回车继续...");
@@ -189,7 +215,7 @@ void alter_profile(void)
   }
   else{
     puts("\t数据库发生错误，按回车继续...");
-    puts(mysql_error(&mysql));
+    //puts(mysql_error(&mysql));
   }
   getchar();
   return;
