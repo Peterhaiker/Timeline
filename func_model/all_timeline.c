@@ -30,10 +30,10 @@ void all_timeline(void)
       puts("\t" Format_Double_Symbol);
       puts("\t|                                                  *菜*单*导*航*                                                       |");
       puts("\t|                                                                                                                      |");
-      puts("\t|               a:增加事件                b:修改事件                c:删除事件                d:返回主页               |");
+      puts("\t|               a:增加事件                b:修改事件                c:删除事件                r:返回主页               |");
       printf("\n\t请选择:_\b");
       char ch;
-      while(1!=scanf("%[a-d,A-D]",&ch)){
+      while(1!=scanf("%[a-c,A-C,r,R]",&ch)){
         while('\n'!=getchar());
         printf("\t不要调皮好不好，重新选择:_\b");
       }
@@ -44,7 +44,7 @@ void all_timeline(void)
         case 'a':add_timeline();break;
         case 'b':alter_timeline();break;
         case 'c':del_timeline();break;
-        case 'd':return;
+        case 'r':return;
       }
     }
     else{

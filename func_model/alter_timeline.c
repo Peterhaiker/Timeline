@@ -18,16 +18,7 @@ void alter_timeline(void)
   char executor[20]={'\0'};
   char event[70]={'\0'};
   printf("\t输入您要修改的事件的执行者:_\b");
-  while(1){
-    fgets(executor,20,stdin);
-    if('\n'!=executor[strlen(executor)-1]){
-      fprintf(stderr,"\t输入的名字过长，重新输入执行者:_\b");
-      while('\n'!=getchar());
-      continue;
-    }
-    executor[strlen(executor)-1]='\0';
-    break;
-  }
+  input_account(executor,20);
 
   if(SELECT_EXECUTOR)
     snprintf(dest,300,"set @var_exe='%s';execute pre_sel_exe using @var_exe",executor);
@@ -103,15 +94,9 @@ void alter_timeline(void)
   char new_state[11]={'\0'};
   printf("\t请输入新执行者，按q取消更改:_\b");
   while(1){
-    fgets(new_executor,20,stdin);
-    if(NULL==strchr(new_executor,'\n')){
-      fprintf(stderr,"\t输入的名字过长，重新输入新执行者:_\b");
-      while('\n'!=getchar());
-      continue;
-    }
-    if('q'==new_executor[0]&&'\n'==new_executor[1])
+    input_account(new_executor,20);
+    if('q'==new_executor[0]&&'\0'==new_executor[1])
       new_executor[0]='\0';
-    new_executor[strlen(new_executor)-1]='\0';
     break;
   }
   printf("\t请输入新事件(上限200字)，按q取消:_\b");
@@ -260,7 +245,6 @@ void alter_timeline(void)
   if(0!=strlen(new_state))
     strncat(dest,"@pre_state,",300);
   strncat(dest,"@pre_exe,@pre_eve;drop prepare pre_update_event",300);
-  puts(dest);
   //更新记录
   if(!mysql_query(&mysql,dest))
     printf("\t修改成功，按回车继续...");

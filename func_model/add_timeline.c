@@ -14,27 +14,13 @@
 void add_timeline(void)
 {
   mysql_set_character_set(&mysql,"utf8");
-  printf("\t输入事件执行者:_\b");
   char executor[20]={'\0'};
   char event[122]={'\0'};
   char exec_time[21]={'\0'};
   char state[12]={'\0'};
   char dest[300]={'\0'};
-  while(1){
-    fgets(executor,20,stdin);
-    if('\n'==executor[strlen(executor)-1]){
-      executor[strlen(executor)-1]='\0';
-      if(NULL!=strpbrk(executor,"/*#-'\"")){
-        printf("\t输入不合法，重新输入(不可包含/*#-'\"):_\b");
-        continue;
-      }
-      break;
-    }
-    else{
-      printf("\t名字太长了，重新输入(上限20):_\b");
-      while('\n'!=getchar());
-    }
-  }
+  printf("\t输入事件执行者:_\b");
+  input_account(executor,20);
   printf("\t输入执行时间(YYYY-MM-DD HH:MM:SS):_\b");
   int year,month,day,hour,min,sec;
   char*p_exec_time=NULL;
@@ -108,15 +94,13 @@ void add_timeline(void)
   printf("\t输入事件内容(上限40):_\b");
   while(1){
     fgets(event,122,stdin);
-    if('\n'==event[strlen(event)-1]){
-      //未超过上限
-      event[strlen(event)-1]='\0';
-      break;
-    }
-    else{
-      printf("\t事件内容超过上限200字，重新输入:_\b");
+    if('\n'!=event[strlen(event)-1]){
+      printf("\t事件超过上限，重新输入(max 120):_\b");
       while('\n'!=getchar());
+      continue;
     }
+    event[strlen(event)-1]='\0';
+    break;
   }
   if(INS_EVENT)
     snprintf(dest,300,"set @var_executor='%s',@var_event='%s',@var_time='%s';execute pre_ins_event using @var_executor,@var_event,@var_time",executor,event,exec_time);

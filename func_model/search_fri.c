@@ -44,17 +44,7 @@ void search_fri(void)
       }
     }
     printf("\t请输入您想搜索的好友名字:_\b");
-    while(1){
-      fgets(name,20,stdin);
-      if(NULL==strchr(name,'\n')){
-        printf("\t名字太长了，重新输入:_\b");
-        while('\n'!=getchar());
-      }
-      else{
-        name[strlen(name)-1]='\0';
-        break;
-      }
-    }
+    input_account(name,20);
     //开始搜寻好友
     snprintf(dest,200,"select * from %s_profile where account='%s'",login_name,name);
     if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){

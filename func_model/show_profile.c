@@ -8,6 +8,7 @@
  */
 
 #include<stdio.h>
+#include<ctype.h>
 #include<string.h>
 #include"../header/timeline.h"
 
@@ -54,19 +55,20 @@ int show_profile(void)
       puts("\t" Format_Double_Symbol);
       puts("\t|                                                      *菜*单*导*航*                                                   |");
       puts("\t|                                                                                                                      |");
-      puts("\t|             a:修改账户                   b:退出账户                  c:删除账户                 d:返回主页           |");
+      puts("\t|             a:修改账户                   b:退出账户                  c:删除账户                 r:返回主页           |");
       printf("\n\t请选择:");
       char ch;
-      while(1!=scanf("%[a-d]",&ch)){
+      while(1!=scanf("%[a-c,A-C,r,R]",&ch)){
         while('\n'!=getchar());
         printf("\t输入不合法，重新选择:");
       }
       while('\n'!=getchar());
+      ch=tolower(ch);
       switch(ch){
         case 'a':alter_profile();break;
         case 'b':return 1;break;
         case 'c':return_value=del_account();break;
-        case 'd':return 0;
+        case 'r':return 0;
         default:break;
       }
       if(1==return_value)//删除账户成功

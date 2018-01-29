@@ -46,27 +46,14 @@ void alter_profile(void)
       }
     }
     //开始选择你要更改的朋友
-    printf("\t您要更改的账户名:_\b");
     char account_name[20]={'\0'};
     char new_sex[6]={'\0'};
     char new_birth[15]={'\0'};
     char new_phone[14]={'\0'};
     char new_motto[50]={'\0'};
     //输入要修改的账户名直到合法才退出循环
-    fgets(account_name,20,stdin);
-    while(1){
-      if(NULL==strchr(account_name,'\n')){
-        printf("\t名字过长，重新输入(max 20):_\b");
-        while('\n'!=getchar());
-        continue;
-      }
-      if(NULL!=strpbrk(account_name,"/*#-'\"")){
-        printf("\t名字不能包含(/,#,*,-,',\")，重新输入:_\b");
-        continue;
-      }
-      account_name[strlen(account_name)-1]='\0';
-      break;
-    }
+    printf("\t您要更改的账户名:_\b");
+    input_account(account_name,20);
 
     while(1){
       if(SELECT_PROFILE_ACCOUNT)
@@ -106,14 +93,7 @@ void alter_profile(void)
     }
     //账户名查找成功,输入性别
     printf("\t性别(男/女):_\b");
-    fgets(new_sex,6,stdin);
-    new_sex[strlen(new_sex)-1]='\0';
-    while(NULL==strstr("女男",new_sex)){
-      //输入不合法
-      printf("\t请输入正确的格式(男/女):_\b");
-      fgets(new_sex,6,stdin);
-      new_sex[strlen(new_sex)-1]='\0';
-    }
+    input_sex(new_sex,6);
     //性别输入成功，输入生日
     char birth_cpy[15]={'\0'};
     char*p1,*p2,*p3;
@@ -166,31 +146,10 @@ void alter_profile(void)
 
     //生日输入成功，输入电话
     printf("\t电话:_\b");
-    while(fgets(new_phone,14,stdin)){
-      //如果输入超过14个字符则清除输入缓冲区
-      if(NULL==strchr(new_phone,'\n')){
-        while('\n'!=getchar());
-        printf("\t你不要欺负我没读过书，有这么长的号码吗。重新输入:_\b");
-      }
-      else{
-        new_phone[strlen(new_phone)-1]='\0';
-        //对不合法输入的处理
-        strtol(new_phone,&p1,10);
-        if(p1!=new_phone+strlen(new_phone)){
-          printf("\t请不要逗我，这是电话号码吗。重新输入:_\b");
-        }
-        else
-          break;//输入正确，跳出循环
-        memset(new_phone,'\0',sizeof(new_phone));
-      }
-    }
-
-
+    input_phone(new_phone,14);
     //电话输入成功，输入座右铭
     printf("\t座右铭(上限50字):");
-    fgets(new_motto,50,stdin);
-    new_motto[strlen(new_motto)-1]='\0';
-
+    input_motto(new_motto,50);
     //开始更新账户信息
     //检测座右铭中是否包含单引号和分号
     char quotation_marks='\'';

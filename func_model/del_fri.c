@@ -15,25 +15,13 @@ void del_fri(void)
   printf("\t请输入您想删除的好友姓名，按q退出:_\b");
   char name[20]={'\0'};
   while(1){
-    fgets(name,20,stdin);
-    if('q'==name[0]&&'\n'==name[1])
+    input_account(name,20);
+    if('q'==name[0]&&'\0'==name[1])
       return;
-    if('\n'!=name[strlen(name)-1]){
-      printf("\t名字太长，重新输入(max 20):_\b");
-      while('\n'!=getchar());
-      continue;
-    }
-    if(0==strcmp(name,login_name)){
-      puts("\t您输入您自己的名字是不可以的，如果您要删除账户请到删除账户区去删除，按回车继续...");
-      getchar();
-      continue;
-    }
-    if(NULL!=strpbrk(name,"/*#-'\"")){
-      printf("输入不合法，重新输入姓名:_\b");
-      continue;
-    }
-    name[strlen(name)-1]='\0';
-    break;
+    if(0==strcmp(name,login_name))
+      puts("\t您输入您自己的名字是不可以的，输入您想删除的好友姓名，按q退出:_\b");
+    else
+      break;
   }
   char dest[200]={'\0'};
   //查询是否存在这个好友

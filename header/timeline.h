@@ -58,6 +58,12 @@ int setting(void);//设置
 void backup(void);//备份数据库
 int restore(void);//恢复数据库
 void prepared_statement(void);//实现大部分预编译语句
-void test(void);
+
+//输入函数接口
+void input_account(char name[],size_t size);
+void input_sex(char sex[],size_t size);
+void input_birth(char birth[],size_t size);
+void input_phone(char phone[],size_t size);
+void input_motto(char motto[],size_t size);
 
 #endif /* !TIMELINE_H */

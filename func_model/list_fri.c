@@ -8,6 +8,7 @@
  */
 
 #include<stdio.h>
+#include<ctype.h>
 #include"../header/timeline.h"
 
 void list_fri(void)
@@ -31,26 +32,26 @@ void list_fri(void)
         }
       }
       else
-        printf("\t                                                 暂无好友\n");
+        printf("\t                                                        暂无好友\n");
       mysql_free_result(result);
       //显示菜单
       puts("\t" Format_Double_Symbol);
       puts("\t|                                                    *菜*单*导*航*                                                     |");
       puts("\t|                                                                                                                      |");
-      puts("\t|             a:搜索好友                b:添加好友                     c:删除好友                d:返回主页            |");
+      puts("\t|             a:搜索好友                b:添加好友                     c:删除好友                r:返回主页            |");
       printf("\n\t请选择:_\b");
       char ch;
-      while(1!=scanf("%[a-d]",&ch)){
+      while(1!=scanf("%[a-c,A-C,r,R]",&ch)){
         while('\n'!=getchar());
         printf("\t输入不合法，请重新选择:_\b");
       }
       while('\n'!=getchar());
-
+      ch=tolower(ch);
       switch(ch){
         case 'a':search_fri();break;
         case 'b':add_fri();break;
         case 'c':del_fri();break;
-        case 'd':return;
+        case 'r':return;
         default:break;
       }
     }//if

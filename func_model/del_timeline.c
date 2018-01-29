@@ -17,16 +17,7 @@ void del_timeline(void)
   char dest[200]={'\0'};
   char event[30]={'\0'};
   printf("\t请输入您要删除的事件的执行者:_\b");
-  while(1){
-    fgets(name,20,stdin);
-    if('\n'!=name[strlen(name)-1]){
-      printf("\t名字太长了，请重新输入:_\b");
-      while('\n'!=getchar());
-      continue;
-    }
-    name[strlen(name)-1]='\0';
-    break;
-  }
+  input_account(name,20);
   if(SELECT_EXECUTOR)
     snprintf(dest,200,"set @var_executor='%s';execute pre_sel_exe using @var_executor",name);
   else
