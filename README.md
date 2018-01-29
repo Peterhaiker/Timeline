@@ -19,8 +19,8 @@
 * 通过本地化设置优化一下输出内容和界面
 
 ### 依赖  
-* compiler support c99
-* mysql version 5+
+* **compiler support c99**
+* **mysql version 5+**
   * ubuntu install mysql-server
       ```
       sudo apt-get install mysql-server
@@ -29,45 +29,45 @@
       ```
       sudo apt-get install mysql-client libmysqlclient-dev
       ```
-  * make you mysql-server support utf8,the way below only for ubuntu[reference link](http://dandanlove.com/2017/02/08/Ubuntu-mysql-code-error/)
-      run this command `sudo vim /etc/mysql/my.cnf` and add the below information into my.cnf
-      ```
-      [client]
-      default-character-set=utf8
-      [mysqld]
-      character_set_server=utf8
-      [mysql]
-      default-character-set=utf8
-      ```
-      then,restart mysql with following two command
-      ```
-      /etc/init.d/mysql stop
-      /etc/init.d/mysql start
-      ```
-      now,all step you finished.and then we make sure its come into effect with following steps
-      * login to mysql server
-          ```
-          mysql -uroot -p
-          ```
-      * run mysql command
-          ```
-          mysql>show variables like "%char%";
-          ```
-          and you will success if the output look like below
-          ```
-          mysql> show variables like "%char%";
-          +--------------------------+----------------------------+
-          | Variable_name            | Value                      |
-          +--------------------------+----------------------------+
-          | character_set_client     | utf8                       |
-          | character_set_connection | utf8                       |
-          | character_set_database   | utf8                       |
-          | character_set_filesystem | binary                     |
-          | character_set_results    | utf8                       |
-          | character_set_server     | utf8                       |
-          | character_set_system     | utf8                       |
-          | character_sets_dir       | /usr/share/mysql/charsets/ |
-          +--------------------------+----------------------------+
-          8 rows in set (0.01 sec)
+* **make you mysql-server support utf8,the way below only for ubuntu**[reference link](http://dandanlove.com/2017/02/08/Ubuntu-mysql-code-error/)  
+    run this command `sudo vim /etc/mysql/my.cnf` and add the below information into my.cnf
+    ```
+    [client]
+    default-character-set=utf8
+    [mysqld]
+    character_set_server=utf8
+    [mysql]
+    default-character-set=utf8
+    ```
+    then,restart mysql with following two command
+    ```
+    /etc/init.d/mysql stop
+    /etc/init.d/mysql start
+    ```
+    now,all step you finished.and then we make sure its come into effect with following steps
+    * login to mysql server
+        ```
+        mysql -uroot -p
+        ```
+    * run mysql command
+        ```
+        mysql>show variables like "%char%";
+        ```
+        and you will success if the output look like below
+        ```
+        mysql> show variables like "%char%";
+        +--------------------------+----------------------------+
+        | Variable_name            | Value                      |
+        +--------------------------+----------------------------+
+        | character_set_client     | utf8                       |
+        | character_set_connection | utf8                       |
+        | character_set_database   | utf8                       |
+        | character_set_filesystem | binary                     |
+        | character_set_results    | utf8                       |
+        | character_set_server     | utf8                       |
+        | character_set_system     | utf8                       |
+        | character_sets_dir       | /usr/share/mysql/charsets/ |
+        +--------------------------+----------------------------+
+        8 rows in set (0.01 sec)
 
-          ```
+        ```
