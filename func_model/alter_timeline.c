@@ -34,18 +34,13 @@ void alter_timeline(void)
   else
     snprintf(dest,300,"select executor from %s_event where executor='%s'",login_name,executor);
   if(!mysql_query(&mysql,dest)){
-    mysql_store_result(&mysql);
-    if(0==mysql_next_result(&mysql)){
-      result=mysql_store_result(&mysql);
-      if(NULL==result){
-        fprintf(stderr,"\t查询事件执行者失败，按回车继续...");
-        getchar();
-        return;
-      }
-    }
-    else{
-      fprintf(stderr,"数据库发生错误，按回车继续...");
-      puts(mysql_error(&mysql));
+    while(0==mysql_next_result(&mysql))
+      ;
+    result=mysql_store_result(&mysql);
+
+//    result=mysql_store_result(&mysql);
+    if(NULL==result){
+      fprintf(stderr,"\t查询事件执行者失败，按回车继续...");
       getchar();
       return;
     }
@@ -59,7 +54,8 @@ void alter_timeline(void)
   }
   else{
     fprintf(stderr,"\t数据库发生错误，按回车继续...");
-    mysql_free_result(result);
+    while(0==mysql_next_result(&mysql))
+      ;
     puts(mysql_error(&mysql));
     getchar();
     return;
@@ -79,24 +75,27 @@ void alter_timeline(void)
   char *p_blank=NULL;
   if(NULL!=(p_blank=strchr(event,' ')))
     *p_blank='%';
-  snprintf(dest,300,"prepare pre_sel_all_profile from 'select * from %s_event where executor=? and event like ?';set @var_exe='%s',@var_eve='%s';execute pre_sel_all_profile using @var_exe,@var_eve",login_name,executor,event);
+  snprintf(dest,300,"prepare pre_sel_all_eve from 'select * from %s_event where executor=? and event like ?';set @var_exe='%s',@var_eve='%s';execute pre_sel_all_eve using @var_exe,@var_eve",login_name,executor,event);
   if(!mysql_query(&mysql,dest)){
-    mysql_store_result(&mysql);
-    mysql_store_result(&mysql);
-    if(0==mysql_next_result(&mysql)){
-      if(NULL==(result=mysql_store_result(&mysql))){
-        fprintf(stderr,"\t获取事件失败，按回车继续...");
-        getchar();
-        return;
-      }
-    }
-    else{
-      fprintf(stderr,"\t数据库发生错误，按回车继续...");
+    while(0==mysql_next_result(&mysql))
+      ;
+    result=mysql_store_result(&mysql);
+    if(NULL==result){
+      fprintf(stderr,"\ta获取事件失败，按回车继续...");
+      puts(dest);
+      puts(mysql_error(&mysql));
       getchar();
       return;
     }
     format_timeline(result);
     mysql_free_result(result);
+  }
+  else{
+    fprintf(stderr,"\t数据库发生错误，按回车继续...");
+    while(0==mysql_next_result(&mysql))
+      ;
+    getchar();
+    return;
   }
   char new_executor[20]={'\0'};
   char new_event[150]={'\0'};
@@ -270,7 +269,7 @@ void alter_timeline(void)
     //puts(mysql_error(&mysql));
   }
   while(0==mysql_next_result(&mysql))
-    mysql_store_result(&mysql);
+    ;
   getchar();
   return;
 }
