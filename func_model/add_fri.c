@@ -167,6 +167,9 @@ phone_again:fgets(phone,15,stdin);
         if(NULL!=strchr(motto,';'))
           mysql_query(&mysql,"delimiter ;");
       }
+      while(0==mysql_next_result(&mysql)){
+        mysql_store_result(&mysql);
+      }
       getchar();
       return;
     }

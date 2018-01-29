@@ -13,10 +13,11 @@
 void list_fri(void)
 {
   char dest[200]={'\0'};
+  mysql_set_character_set(&mysql,"utf8");
   while(1){
     system("reset");
-    mysql_set_character_set(&mysql,"utf8");
     snprintf(dest,200,"select * from %s_profile where account<>'%s'",login_name,login_name);
+    puts(dest);
     if((!mysql_query(&mysql,dest))&&(NULL!=(result=mysql_store_result(&mysql)))){
       //sql语句执行成功且获取到结果集
       puts("\t" Format_Double_Symbol);
@@ -52,7 +53,6 @@ void list_fri(void)
         case 'd':return;
         default:break;
       }
-
     }//if
     else{
       fprintf(stderr,"\t获取朋友列表失败，按回车继续...");
