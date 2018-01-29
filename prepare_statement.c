@@ -36,7 +36,7 @@ void prepared_statement(void)
   if(0==mysql_query(&mysql,dest))
     SELECT_PROFILE_ACCOUNT=true;
   //查询event表的executor字段
-  snprintf(dest,200,"prepare pre_sel_exc from 'select executor from %s_event where executor=?'",login_name);
+  snprintf(dest,200,"prepare pre_sel_exe from 'select executor from %s_event where executor=?'",login_name);
   if(0==mysql_query(&mysql,dest))
     SELECT_EXECUTOR=true;
   //删除passwd记录
@@ -47,7 +47,7 @@ void prepared_statement(void)
   if(0==mysql_query(&mysql,dest))
     DEL_PROFILE=true;
   //删除event记录
-  snprintf(dest,200,"prepare pre_del_profile from 'delete from %s_event where executor=? and event like ?'",login_name);
+  snprintf(dest,200,"prepare pre_del_event from 'delete from %s_event where executor=? and event like ?'",login_name);
   if(0==mysql_query(&mysql,dest))
     DEL_EVENT=true;
   //插入记录到profile表

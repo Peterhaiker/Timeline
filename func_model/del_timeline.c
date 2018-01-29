@@ -31,7 +31,25 @@ void del_timeline(void)
     snprintf(dest,200,"set @var_executor='%s';execute pre_select_executor using @var_executor",name);
   else
     snprintf(dest,200,"select executor from %s_event where executor='%s'",login_name,name);
-  if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
+  if(!mysql_query(&mysql,dest)){
+    //取结果集
+    if(SELECT_EXECUTOR){
+      mysql_store_result(&mysql);
+      if(0==mysql_next_result(&mysql))
+        result=mysql_store_result(&mysql);
+      else{
+        fprintf(stderr,"\t数据库发生错误，按回车继续...");
+        getchar();
+        return;
+      }
+    }
+    else
+      result=mysql_store_result(&mysql);
+    //检测取到的结果集是否为空
+    if(NULL==result){
+      fprintf(stderr,"\t数据库发生错误，按回车继续...");
+      return;
+    }
     if(NULL!=mysql_fetch_row(result)){
       //存在这个执行者，继续
       mysql_free_result(result);
@@ -60,6 +78,9 @@ void del_timeline(void)
             if(false==DEL_EVENT)
               if(NULL!=strchr(event,';'))
                 mysql_query(&mysql,"delimiter ;");
+            //清空刚刚可能获得的多个结果集
+            while(0==mysql_next_result(&mysql))
+              mysql_store_result(&mysql);
             getchar();
             return;
           }
@@ -75,6 +96,7 @@ void del_timeline(void)
       }
     }
     else{
+      mysql_free_result(result);
       printf("\t不存在这个执行者，按回车继续:_\b");
     }
   }

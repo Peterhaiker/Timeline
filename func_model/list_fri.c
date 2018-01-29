@@ -25,7 +25,7 @@ void list_fri(void)
       if(0<mysql_num_rows(result)){
         while(row=mysql_fetch_row(result)){
           puts("\t" Format_Single_Symbol);
-          printf("\t|姓名:%-40s性别:%-39s好友数:%-26llu\n",row[1],row[2]?row[2]:"未知",mysql_num_rows(result)-1);
+          printf("\t|姓名:%-40s性别:%-39s\n",row[1],row[2]?row[2]:"未知");
           printf("\t|生日:%-47s电话:%-61s\n",row[3]?row[3]:"未知",row[4]?row[4]:"未知");
           printf("\t|座右铭:%-115s\n",row[5]?row[5]:"未知");
         }

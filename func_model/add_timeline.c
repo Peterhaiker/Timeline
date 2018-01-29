@@ -41,7 +41,7 @@ void add_timeline(void)
   while(1){
     fgets(exec_time,21,stdin);
     if('-'!=exec_time[4]||'-'!=exec_time[7]||' '!=exec_time[10]||':'!=exec_time[13]||':'!=exec_time[16]||'\n'!=exec_time[19]){
-      printf("输入不正确，重新输入(YYYY-MM-DD HH:MM:SS):_\b");
+      printf("\t输入不正确，重新输入(YYYY-MM-DD HH:MM:SS):_\b");
       if('\n'!=exec_time[strlen(exec_time)-1])
         while('\n'!=getchar());
     }
@@ -130,7 +130,6 @@ void add_timeline(void)
   }
   if(!mysql_query(&mysql,dest)){
     printf("\t事件已增加，按回车继续...");
-    getchar();
   }
   else{
     printf("\t事件增加失败，按回车继续...");
@@ -140,5 +139,9 @@ void add_timeline(void)
     if(NULL!=strchr(event,';'))
       mysql_query(&mysql,"delimiter //");
   }
+  //清空刚刚请求得到的多个结果集
+  getchar();
+  while(0==mysql_next_result(&mysql))
+    mysql_store_result(&mysql);
   return;
 }

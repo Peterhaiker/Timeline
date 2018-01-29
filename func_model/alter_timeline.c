@@ -30,10 +30,25 @@ void alter_timeline(void)
   }
 
   if(SELECT_EXECUTOR)
-    snprintf(dest,300,"set @var_exe='%s';execute pre_select_executor using @var_exe",executor);
+    snprintf(dest,300,"set @var_exe='%s';execute pre_sel_exe using @var_exe",executor);
   else
     snprintf(dest,300,"select executor from %s_event where executor='%s'",login_name,executor);
-  if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
+  if(!mysql_query(&mysql,dest)){
+    mysql_store_result(&mysql);
+    if(0==mysql_next_result(&mysql)){
+      result=mysql_store_result(&mysql);
+      if(NULL==result){
+        fprintf(stderr,"\t查询事件执行者失败，按回车继续...");
+        getchar();
+        return;
+      }
+    }
+    else{
+      fprintf(stderr,"数据库发生错误，按回车继续...");
+      puts(mysql_error(&mysql));
+      getchar();
+      return;
+    }
     if(NULL==mysql_fetch_row(result)){
       fprintf(stderr,"\t没有这个执行者，按回车继续...");
       mysql_free_result(result);
@@ -44,7 +59,8 @@ void alter_timeline(void)
   }
   else{
     fprintf(stderr,"\t数据库发生错误，按回车继续...");
-    //puts(mysql_error(&mysql));
+    mysql_free_result(result);
+    puts(mysql_error(&mysql));
     getchar();
     return;
   }
@@ -63,8 +79,22 @@ void alter_timeline(void)
   char *p_blank=NULL;
   if(NULL!=(p_blank=strchr(event,' ')))
     *p_blank='%';
-  snprintf(dest,300,"prepare pre_sel_all_profile from 'select * from %s_event where executor=? and event like ?';set @var_exe='%s',@var_eve='%s';execute pre_sel_all_profile using @var_exe,@var_eve;drop prepare pre_select_executor",login_name,executor,event);
-  if(!mysql_query(&mysql,dest)&&(NULL!=(result=mysql_store_result(&mysql)))){
+  snprintf(dest,300,"prepare pre_sel_all_profile from 'select * from %s_event where executor=? and event like ?';set @var_exe='%s',@var_eve='%s';execute pre_sel_all_profile using @var_exe,@var_eve",login_name,executor,event);
+  if(!mysql_query(&mysql,dest)){
+    mysql_store_result(&mysql);
+    mysql_store_result(&mysql);
+    if(0==mysql_next_result(&mysql)){
+      if(NULL==(result=mysql_store_result(&mysql))){
+        fprintf(stderr,"\t获取事件失败，按回车继续...");
+        getchar();
+        return;
+      }
+    }
+    else{
+      fprintf(stderr,"\t数据库发生错误，按回车继续...");
+      getchar();
+      return;
+    }
     format_timeline(result);
     mysql_free_result(result);
   }
@@ -239,6 +269,8 @@ void alter_timeline(void)
     printf("\t修改失败，按回车继续...");
     //puts(mysql_error(&mysql));
   }
-    getchar();
+  while(0==mysql_next_result(&mysql))
+    mysql_store_result(&mysql);
+  getchar();
   return;
 }

@@ -139,8 +139,10 @@ phone_again:fgets(phone,15,stdin);
       printf("\t座右铭(上限150):_\b");
       while(1){
         fgets(motto,150,stdin);
-        if('\n'==motto[strlen(motto)-1])
+        if('\n'==motto[strlen(motto)-1]){
+          motto[strlen(motto)-1]='\0';
           break;
+        }
         else{
           printf("\t超过上限，重新输入:_\b");
           while('\n'!=getchar());
