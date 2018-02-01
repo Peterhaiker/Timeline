@@ -55,7 +55,7 @@ int home(void)
         while('\n'!=getchar());
 
         switch(ch){
-          case 'a':return_value=show_profile();break;
+          case 'a':show_profile();break;
           case 'b':list_fri();break;
           case 'c':all_timeline();break;
           case 'd':return_value=setting();break;

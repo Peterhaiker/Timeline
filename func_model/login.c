@@ -25,6 +25,8 @@ void login(void)
     exit(EXIT_FAILURE);
   }
   mysql_set_character_set(&mysql,"utf8");
+  //跳转函数供注销函数和退出登录模块跳转
+  setjmp(ENV);
   while(1){
     //连接数据库成功
 show_menu:system("reset");
@@ -55,12 +57,11 @@ show_menu:system("reset");
        break;
       }
       //构造sql语句
-      //if(LOGIN)
-      //  snprintf(dest,200,"set @var_acc='%s',@var_pas='%s';execute pre_login using @var_acc,@var_pas",account,passwd);
-      //else
+      if(LOGIN){
+        snprintf(dest,200,"set @var_acc='%s',@var_pas='%s';execute pre_login using @var_acc,@var_pas",account,passwd);
+      }
+      else
         snprintf(dest,200,"select account,passwd from passwd where account='%s' and passwd=password('%s')",account,passwd);
-      //test
-      puts(dest);
       if(mysql_query(&mysql,dest)){
         //sql语句执行失败
         printf("\t服务器故障，请稍后再试!!!按回车继续...\n");
@@ -71,6 +72,10 @@ show_menu:system("reset");
       }
       else{//sql语句执行成功
         result=mysql_store_result(&mysql);
+        while(0==mysql_next_result(&mysql)){
+          mysql_free_result(result);
+          result=mysql_store_result(&mysql);
+        }
           if(0<mysql_num_rows(result)){
             strncpy(login_name,account,20);
             goto show_profile;//如果匹配成功就跳转，否则即为输入错误
@@ -97,6 +102,10 @@ show_menu:system("reset");
         printf("\t                                         服务器故障，请稍后再试!!!\n");
       else{
         result=mysql_store_result(&mysql);
+        while(0==mysql_next_result(&mysql)){
+          mysql_free_result(result);
+          result=mysql_store_result(&mysql);
+        }
         if(NULL!=mysql_fetch_row(result)){
           //数据库存有记录
               printf("\t                                 此用户名已存在，按回车继续!!!\n");

@@ -13,6 +13,7 @@
 #include<time.h>
 #include<stdbool.h>
 #include<mysql/mysql.h>
+#include<setjmp.h>
 
 #define Format_Double_Symbol "========================================================================================================================"
 #define Format_Single_Symbol "------------------------------------------------------------------------------------------------------------------------"
@@ -25,6 +26,7 @@ extern MYSQL mysql;
 extern MYSQL_RES *result;
 extern MYSQL_ROW row;
 extern char login_name[20];
+extern jmp_buf ENV;//跳转函数保存的当时的环境
 
 //预编译语句名称
 extern bool SELECT_PASSWD_ACCOUNT;//选择passwd表中的account记录
@@ -41,7 +43,7 @@ extern bool INS_EVENT;//删除event表记录
 //功能接口
 int home(void);//主页
 void login(void);//登录模块
-int show_profile(void);//显示个人信息
+void show_profile(void);//显示个人信息
 void alter_profile(void);//修改用户信息
 void all_timeline(void);//以时间线形式显示所有事件
 void format_timeline(MYSQL_RES*result);//格式化输出事件集
@@ -53,7 +55,7 @@ void list_fri(void);//列出所有的朋友
 void search_fri(void);//搜索好友
 void add_fri(void);//增加一个朋友
 void del_fri(void);//删除好友
-int del_account(void);//删除账户
+void del_account(void);//删除账户
 int setting(void);//设置
 void backup(void);//备份数据库
 int restore(void);//恢复数据库

@@ -9,8 +9,10 @@
 
 #include "stdio.h"
 #include"header/timeline.h"
+#include<setjmp.h>
 
 char login_name[20]={'\0'};//保存当前登录账户名
+jmp_buf ENV;//跳转函数保存的跳转时的环境
 MYSQL mysql;//MYSQL对象
 MYSQL_RES *result;//结果集变量
 MYSQL_ROW row;//定义行变量

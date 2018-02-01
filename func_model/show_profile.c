@@ -11,8 +11,9 @@
 #include<ctype.h>
 #include<string.h>
 #include"../header/timeline.h"
+#include<setjmp.h>
 
-int show_profile(void)
+void show_profile(void)
 {
   char*sql=NULL;//存储sql语句通用部分
   char dest[200]={'\0'};//存储sql语句
@@ -66,19 +67,17 @@ int show_profile(void)
       ch=tolower(ch);
       switch(ch){
         case 'a':alter_profile();break;
-        case 'b':return 1;break;
-        case 'c':return_value=del_account();break;
-        case 'r':return 0;
+        case 'b':longjmp(ENV,2);break;
+        case 'c':del_account();break;
+        case 'r':return;
         default:break;
       }
-      if(1==return_value)//删除账户成功
-        return 1;
     }
     else{
       //执行sql语句失败或获取结果集失败
       fprintf(stderr,"\t                                         获取数据失败，按回车继续...");
       getchar();
-      return 0;
+      return;
     }
   }
 }
